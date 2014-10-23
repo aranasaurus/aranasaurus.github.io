@@ -1,9 +1,10 @@
-name: Solar Theme
-url: http://example.org
-description: A stylish blog using the Solarized color palette
+name: The Aranasaurus Nest
+url: http://aranasaurus.com
+description: Where @aranasaurus keeps his code and things
+twitter: aranasaurus
 
 permalink: /:year/:month/:day/:title/
 paginate: 10
-pygments: true
+highlighter: 'pygments'
 
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
