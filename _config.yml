@@ -2,6 +2,7 @@ name: The Aranasaurus Nest
 url: http://aranasaurus.com
 description: Where @aranasaurus keeps his code and things
 twitter: aranasaurus
+github: aranasaurus
 
 permalink: /:year/:month/:day/:title/
 paginate: 10
