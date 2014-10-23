@@ -36,7 +36,7 @@ as I couldn't get the SDL-lua bindings that I found to build on my machine and I
 So all that to say: I got the wind taken out of my sails for the current game idea and I need to step back and try again
 with something smaller, which brings me to...
 
-## A Game a Week
+# A Game a Week
 
 Inspired by [this post][game-a-week-gamasutra] by [Rami Ismail][rami] ([this blog too!][game-a-week-msminotaur]), I'm going
 to start building (and releasing) a game a week. The gist of the idea is that you build lots of _little_ games and put them
