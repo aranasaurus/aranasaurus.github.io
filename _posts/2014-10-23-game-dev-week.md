@@ -10,6 +10,8 @@ from the day job to work on a game idea I've been rolling around for quite some 
 a prototype working but I wanted to give it my full attention for a week and see where I could get it in that time. I'll
 talk more about the details of the game in other posts, this one is more about the experience of said "Game Dev Week".
 
+<!-- more -->
+
 I started off the week trying to get the [framework][moai] I had chosen to build and work. I really like the way Moai is
 supposed to work: you set up a host for each platform you want to support and write a layer that takes the platform specific
 stuff (like inputs) and feeds those things to Moai, then all of your game logic is the same for all platforms but you just

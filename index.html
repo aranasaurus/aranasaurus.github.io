@@ -16,7 +16,7 @@ title: The Aranasaurus Nest
 			<h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
 		{% endif %}
 
-		<div class="post-content">{{ post.content }}</div>
+        <div class="excerpt">{{ post.excerpt | remove: '<p>' | remove: '</p>' }} &nbsp;&nbsp;<strong style="float:right"><a href="{{ post.url }}">Read more...</a><strong></div>
 
 	</article>
 

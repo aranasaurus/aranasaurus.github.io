@@ -9,3 +9,4 @@ paginate: 10
 highlighter: 'pygments'
 
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
+excerpt_separator: "<!-- more -->"
