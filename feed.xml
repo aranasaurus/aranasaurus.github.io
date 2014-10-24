@@ -1,20 +1,73 @@
----
----
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>{{ site.name }}</title>
-		<description>{{ site.description }}</description>
-		<link>{{ site.url }}</link>
-		<atom:link href="{{ site.url }}/feed.xml" rel="self" type="application/rss+xml" />
-		{% for post in site.posts limit:10 %}
+		<title>The Aranasaurus Nest</title>
+		<description>Where @aranasaurus keeps his code and things</description>
+		<link>http://aranasaurus.com</link>
+		<atom:link href="http://aranasaurus.com/feed.xml" rel="self" type="application/rss+xml" />
+		
 			<item>
-				<title>{{ post.title }}</title>
-				<description>{{ post.content | xml_escape }}</description>
-				<pubDate>{{ post.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
-				<link>{{ site.url }}{{ post.url }}</link>
-				<guid isPermaLink="true">{{ site.url }}{{ post.url }}</guid>
+				<title>Game Dev Week</title>
+				<description>&lt;p&gt;By day I’m a mobile developer working for &lt;a href=&quot;http://www.esri.com&quot;&gt;Esri&lt;/a&gt; at their &lt;a href=&quot;http://pdx.esri.com&quot;&gt;Portland R&amp;amp;D Center&lt;/a&gt;.
+By night (and weekend), when not playing with my kids, I really enjoy making games, though. So recently I took a week off
+from the day job to work on a game idea I’ve been rolling around for quite some time (while the kids are at school). I had
+a prototype working but I wanted to give it my full attention for a week and see where I could get it in that time. I’ll
+talk more about the details of the game in other posts, this one is more about the experience of said “Game Dev Week”.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;I started off the week trying to get the &lt;a href=&quot;http://getmoai.com&quot; title=&quot;MOAI SDK&quot;&gt;framework&lt;/a&gt; I had chosen to build and work. I really like the way Moai is
+supposed to work: you set up a host for each platform you want to support and write a layer that takes the platform specific
+stuff (like inputs) and feeds those things to Moai, then all of your game logic is the same for all platforms but you just
+have to write the parts that differ. So I really like the &lt;strong&gt;idea&lt;/strong&gt; of Moai, but I couldn’t get it to work. I don’t want to
+say that there’s anything wrong with Moai, per se, but their documentation leaves a lot to be desired and I just wasn’t dev
+enough to get it working with my environment and requirements. I spent 2 days trying to do this and ended up giving up, so
+that’s a significant portion of my week essentially wasted.&lt;/p&gt;
+
+&lt;p&gt;The original prototype was done in &lt;a href=&quot;http://love2d.org&quot; title=&quot;Löve&quot;&gt;Löve&lt;/a&gt; which is really easy to set up and do rapid development with, however it
+didn’t support mobile (officially) which was why I went with Moai. However I found this &lt;a href=&quot;http://love2d.org/forums/viewtopic.php?f=12&amp;amp;t=76985&quot; title=&quot;Löve for iOS&quot;&gt;branch&lt;/a&gt; of Löve which
+touted some support for iOS (and it was branched off a branch with support for Android), so I grabbed that and decided to
+use that for the rest of the week. I had to rewrite all of the stuff from my prototype (which was done with nothing but
+gamepad controls support), plus it was a prototype, and that’s what you do with prototype code. By the end of the week I
+had my mobile version with touch controls but not much else than my prototype had (in fact, slightly less), which was kind
+of disappointing. And when I went to implement the next part of my game I realized that I was really going to end up needing
+3D support, but only for the background. While this may be possible with Löve, it’s not what it’s designed for and it would
+be a hack, even moreso than the mobile support (which is actually quite good), and I just didn’t want to go down that road.&lt;/p&gt;
+
+&lt;p&gt;So I came to the conclusion that what I’m really going to have to do is set up an OpenGL context of my own and basically do
+what I wanted Moai to do, but on a smaller (more focused) scale. I plan on using [SDL][sdl] to handle windowing and input,
+but that means using C++, which I don’t know very well. I’m considering doing lua bindings for the pieces of SDL that I need,
+as I couldn’t get the SDL-lua bindings that I found to build on my machine and I didn’t want to go down that hole again.&lt;/p&gt;
+
+&lt;p&gt;So all that to say: I got the wind taken out of my sails for the current game idea and I need to step back and try again
+with something smaller, which brings me to…&lt;/p&gt;
+
+&lt;h1 id=&quot;a-game-a-week&quot;&gt;A Game a Week&lt;/h1&gt;
+
+&lt;p&gt;Inspired by &lt;a href=&quot;http://www.gamasutra.com/blogs/RamiIsmail/20140226/211807/Game_A_Week_Getting_Experienced_At_Failure.php&quot; title=&quot;A Game A Week - Gamasutra&quot;&gt;this post&lt;/a&gt; by &lt;a href=&quot;http://ramiismail.com&quot; title=&quot;Rami Ismail of Vlambeer&quot;&gt;Rami Ismail&lt;/a&gt; (&lt;a href=&quot;http://msminotaur.com/blog/?cat=4&quot; title=&quot;Game a Week - msminotaur&quot;&gt;this blog too!&lt;/a&gt;), I’m going
+to start building (and releasing) a game a week. The gist of the idea is that you build lots of &lt;em&gt;little&lt;/em&gt; games and put them
+out there for people to play. Get the experience of making something and finding out what sucks, what doesn’t, and why. But
+doing so with tiny projects that you’re not sinking too much time/energy into. Another big part of this is that you don’t
+touch the game again after the release, at least not as part of the Game a Week challenge. You can pick the game up later
+and turn it into a full sized project, but each week is supposed to be something completely new. For my first few weeks I’m
+going to keep it super duper simple, like Pong and Breakout clone simple, so that I can get an engine of sorts pieced together.
+After I get a few of those out of the way and have some tools to work with I’ll start getting a little more adventurous with
+my ideas.&lt;/p&gt;
+
+&lt;p&gt;Along with the game each week I’ll be posting a post-mortem about it here, to log the process and provide access to the game!
+It’s also possible that I’ll be posting about the week’s game throughout the week, depending on progress, of course.&lt;/p&gt;
+
+&lt;p&gt;I’m not sure how long I’ll do the challenge, but my initial goal is going to be 8 weeks, starting next week. This post is the
+first step in the process and I’ll probably get started on the Pong clone this week, even though it’ll be a short week, so I
+can get the initial project set up stuff out of the way and be ready to go for reals next week.&lt;/p&gt;
+
+&lt;p&gt;Anyway, I hope you’ll come back and try my games on this challenge, and send me some feedback on &lt;a href=&quot;http://twitter.com/aranasaurus&quot;&gt;twitter&lt;/a&gt;!&lt;/p&gt;
+
+</description>
+				<pubDate>Thu, 23 Oct 2014 09:42:00 -0700</pubDate>
+				<link>http://aranasaurus.com/2014/10/23/game-dev-week/</link>
+				<guid isPermaLink="true">http://aranasaurus.com/2014/10/23/game-dev-week/</guid>
 			</item>
-		{% endfor %}
+		
 	</channel>
 </rss>

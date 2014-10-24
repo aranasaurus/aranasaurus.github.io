@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <title>Game Dev Week</title>
+  <meta name="viewport" content="width=device-width">
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="/assets/css/style.css" rel="stylesheet" />
+  <link href="/assets/css/colors-light.css" rel="stylesheet" />
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-56022486-1', 'auto');
+ga('send', 'pageview');
+
+  </script>
+</head>
+
+<body>
+
+
+
+  <header id="header">
+    <h1><a href="/">The Aranasaurus Nest</a></h1>
+    <p>Where @aranasaurus keeps his code and things</p>
+  </header>
+
+
+
+  <div id="page">
+
+
+
+    <div id="sidebar">
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/archives">Archive</a></li>
+          <!--<li><a href="/about">About</a></li>-->
+          <li><a href="http://twitter.com/aranasaurus">Twitter</a></li>
+          <li><a href="http://github.com/aranasaurus">GitHub</a></li>
+          <li><a href="/feed.xml">RSS Feed</a></li>
+        </ul>
+      </nav>
+    </div>
+
+
+
+    <div id="content">
+      <article class="post">
+
+	
+		<h1><a href="/2014/10/23/game-dev-week/">Game Dev Week</a></h1>
+	
+
+	<div class="post-content"><p>By day I’m a mobile developer working for <a href="http://www.esri.com">Esri</a> at their <a href="http://pdx.esri.com">Portland R&amp;D Center</a>.
+By night (and weekend), when not playing with my kids, I really enjoy making games, though. So recently I took a week off
+from the day job to work on a game idea I’ve been rolling around for quite some time (while the kids are at school). I had
+a prototype working but I wanted to give it my full attention for a week and see where I could get it in that time. I’ll
+talk more about the details of the game in other posts, this one is more about the experience of said “Game Dev Week”.</p>
+
+<!-- more -->
+
+<p>I started off the week trying to get the <a href="http://getmoai.com" title="MOAI SDK">framework</a> I had chosen to build and work. I really like the way Moai is
+supposed to work: you set up a host for each platform you want to support and write a layer that takes the platform specific
+stuff (like inputs) and feeds those things to Moai, then all of your game logic is the same for all platforms but you just
+have to write the parts that differ. So I really like the <strong>idea</strong> of Moai, but I couldn’t get it to work. I don’t want to
+say that there’s anything wrong with Moai, per se, but their documentation leaves a lot to be desired and I just wasn’t dev
+enough to get it working with my environment and requirements. I spent 2 days trying to do this and ended up giving up, so
+that’s a significant portion of my week essentially wasted.</p>
+
+<p>The original prototype was done in <a href="http://love2d.org" title="Löve">Löve</a> which is really easy to set up and do rapid development with, however it
+didn’t support mobile (officially) which was why I went with Moai. However I found this <a href="http://love2d.org/forums/viewtopic.php?f=12&amp;t=76985" title="Löve for iOS">branch</a> of Löve which
+touted some support for iOS (and it was branched off a branch with support for Android), so I grabbed that and decided to
+use that for the rest of the week. I had to rewrite all of the stuff from my prototype (which was done with nothing but
+gamepad controls support), plus it was a prototype, and that’s what you do with prototype code. By the end of the week I
+had my mobile version with touch controls but not much else than my prototype had (in fact, slightly less), which was kind
+of disappointing. And when I went to implement the next part of my game I realized that I was really going to end up needing
+3D support, but only for the background. While this may be possible with Löve, it’s not what it’s designed for and it would
+be a hack, even moreso than the mobile support (which is actually quite good), and I just didn’t want to go down that road.</p>
+
+<p>So I came to the conclusion that what I’m really going to have to do is set up an OpenGL context of my own and basically do
+what I wanted Moai to do, but on a smaller (more focused) scale. I plan on using [SDL][sdl] to handle windowing and input,
+but that means using C++, which I don’t know very well. I’m considering doing lua bindings for the pieces of SDL that I need,
+as I couldn’t get the SDL-lua bindings that I found to build on my machine and I didn’t want to go down that hole again.</p>
+
+<p>So all that to say: I got the wind taken out of my sails for the current game idea and I need to step back and try again
+with something smaller, which brings me to…</p>
+
+<h1 id="a-game-a-week">A Game a Week</h1>
+
+<p>Inspired by <a href="http://www.gamasutra.com/blogs/RamiIsmail/20140226/211807/Game_A_Week_Getting_Experienced_At_Failure.php" title="A Game A Week - Gamasutra">this post</a> by <a href="http://ramiismail.com" title="Rami Ismail of Vlambeer">Rami Ismail</a> (<a href="http://msminotaur.com/blog/?cat=4" title="Game a Week - msminotaur">this blog too!</a>), I’m going
+to start building (and releasing) a game a week. The gist of the idea is that you build lots of <em>little</em> games and put them
+out there for people to play. Get the experience of making something and finding out what sucks, what doesn’t, and why. But
+doing so with tiny projects that you’re not sinking too much time/energy into. Another big part of this is that you don’t
+touch the game again after the release, at least not as part of the Game a Week challenge. You can pick the game up later
+and turn it into a full sized project, but each week is supposed to be something completely new. For my first few weeks I’m
+going to keep it super duper simple, like Pong and Breakout clone simple, so that I can get an engine of sorts pieced together.
+After I get a few of those out of the way and have some tools to work with I’ll start getting a little more adventurous with
+my ideas.</p>
+
+<p>Along with the game each week I’ll be posting a post-mortem about it here, to log the process and provide access to the game!
+It’s also possible that I’ll be posting about the week’s game throughout the week, depending on progress, of course.</p>
+
+<p>I’m not sure how long I’ll do the challenge, but my initial goal is going to be 8 weeks, starting next week. This post is the
+first step in the process and I’ll probably get started on the Pong clone this week, even though it’ll be a short week, so I
+can get the initial project set up stuff out of the way and be ready to go for reals next week.</p>
+
+<p>Anyway, I hope you’ll come back and try my games on this challenge, and send me some feedback on <a href="http://twitter.com/aranasaurus">twitter</a>!</p>
+
+</div>
+
+	<p class="meta">Posted on <span class="postdate">Oct 23, 2014</span></p>
+
+</article>
+    </div>
+
+
+
+  </div>
+
+
+
+  <footer id="footer">
+    <p class="copyright">Copyright &copy; 2014 aranasaurus.com, theme by <a href="http://www.webmaster-source.com">Matt Harzewski</a></p>
+  </footer>
+
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script src="/assets/js/jquery.mobilemenu.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $('#sidebar nav ul').mobileMenu({'topOptionText': 'Menu', 'prependTo': '#sidebar nav'});
+    });
+  </script>
+
+
+
+</body>
+</html>
