@@ -1,5 +1,5 @@
 _site/*
-_deploy.yml
+.deploy/*
 
 Thumbs.db
 .DS_Store
