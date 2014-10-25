@@ -26,7 +26,8 @@ first week is actually going to end up being 1.5 weeks.&lt;/p&gt;
 &lt;p&gt;Tonight (and well into the wee hours of the morning) I did a bit of research and eliminated the &lt;a href=&quot;http://golang.org&quot; title=&quot;Go&quot;&gt;go-lang&lt;/a&gt; option
 as it still can’t be built to iOS as far as I can tell. I’ve settled on SDL for sure, and got a templatizable
 Xcode project started which is building to the Simulator. I found &lt;a href=&quot;http://www.ciaranmccormack.com/sdl-2-0-on-ios-using-xcode-opengl-es-2-0-and-c-11/&quot; title=&quot;SDL 2 on iOS - Ciaran McCormack&quot;&gt;this video&lt;/a&gt; quite helpful
-in that endeavor.&lt;/p&gt;
+in that endeavor. I started a &lt;a href=&quot;http://github.com/aranasaurus/game-a-week&quot;&gt;github repo&lt;/a&gt; for the whole
+challenge and put tonight’s progress in there.&lt;/p&gt;
 
 &lt;p&gt;Tomorrow I’ll need to do a bit more reading about doing Lua bindings, and experiment a bit with that and think
 about how/if I want to design the engine with respect to that. I’d really much rather be writing game logic
