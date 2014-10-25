@@ -15,7 +15,7 @@ talk more about the details of the game in other posts, this one is more about t
 I started off the week trying to get the [framework][moai] I had chosen to build and work. I really like the way Moai is
 supposed to work: you set up a host for each platform you want to support and write a layer that takes the platform specific
 stuff (like inputs) and feeds those things to Moai, then all of your game logic is the same for all platforms but you just
-have to write the parts that differ. So I really like the __idea__ of Moai, but I couldn't get it to work. I don't want to
+have to write the parts that differ. So I really like the _idea_ of Moai, but I couldn't get it to work. I don't want to
 say that there's anything wrong with Moai, per se, but their documentation leaves a lot to be desired and I just wasn't dev
 enough to get it working with my environment and requirements. I spent 2 days trying to do this and ended up giving up, so
 that's a significant portion of my week essentially wasted.
@@ -23,8 +23,8 @@ that's a significant portion of my week essentially wasted.
 The original prototype was done in [Löve][love2d] which is really easy to set up and do rapid development with, however it
 didn't support mobile (officially) which was why I went with Moai. However I found this [branch][love-ios] of Löve which
 touted some support for iOS (and it was branched off a branch with support for Android), so I grabbed that and decided to
-use that for the rest of the week. I had to rewrite all of the stuff from my prototype (which was done with nothing but
-gamepad controls support), plus it was a prototype, and that's what you do with prototype code. By the end of the week I
+use that for the rest of the week. I had to rewrite all of the stuff from my prototype, which was done with nothing but
+gamepad controls support, plus it was a prototype, and that's what you do with prototype code. By the end of the week I
 had my mobile version with touch controls but not much else than my prototype had (in fact, slightly less), which was kind
 of disappointing. And when I went to implement the next part of my game I realized that I was really going to end up needing
 3D support, but only for the background. While this may be possible with Löve, it's not what it's designed for and it would
@@ -35,12 +35,12 @@ what I wanted Moai to do, but on a smaller (more focused) scale. I plan on using
 but that means using C++, which I don't know very well. I'm considering doing lua bindings for the pieces of SDL that I need,
 as I couldn't get the SDL-lua bindings that I found to build on my machine and I didn't want to go down that hole again.
 
-So all that to say: I got the wind taken out of my sails for the current game idea and I need to step back and try again
-with something smaller, which brings me to...
+So all that to say: I got the wind taken out of my sails for the current game idea and I need to take a step back and try
+again with something smaller, which brings me to...
 
 # A Game a Week
 
-Inspired by [this post][game-a-week-gamasutra] by [Rami Ismail][rami] ([this blog too!][game-a-week-msminotaur]), I'm going
+Inspired by [this post][game-a-week-gamasutra] by [Rami Ismail][rami] (and [this blog][game-a-week-msminotaur] by [Adriel Wallick][msminotaur]), I'm going
 to start building (and releasing) a game a week. The gist of the idea is that you build lots of _little_ games and put them
 out there for people to play. Get the experience of making something and finding out what sucks, what doesn't, and why. But
 doing so with tiny projects that you're not sinking too much time/energy into. Another big part of this is that you don't
@@ -62,6 +62,8 @@ Anyway, I hope you'll come back and try my games on this challenge, and send me 
 [moai]: http://getmoai.com "MOAI SDK"
 [love2d]: http://love2d.org "Löve"
 [love-ios]: http://love2d.org/forums/viewtopic.php?f=12&t=76985 "Löve for iOS"
+[sdl]: http://libsdl.org "SDL 2"
 [game-a-week-gamasutra]: http://www.gamasutra.com/blogs/RamiIsmail/20140226/211807/Game_A_Week_Getting_Experienced_At_Failure.php "A Game A Week - Gamasutra"
-[game-a-week-msminotaur]: http://msminotaur.com/blog/?cat=4 "Game a Week - msminotaur"
+[game-a-week-msminotaur]: http://msminotaur.com/blog/?cat=4 "Game a Week"
 [rami]: http://ramiismail.com "Rami Ismail of Vlambeer"
+[msminotaur]: http://msminotaur.com "@msminotaur"
