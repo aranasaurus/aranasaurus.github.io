@@ -12,8 +12,21 @@ layout: default
 		<h1><a href="{{ page.url }}">{{ page.title }}</a></h1>
 	{% endif %}
 
-	<div class="post-content">{{ content }}</div>
+	<div class="post-content">
+        {{ content }}
+        {% if page.request_feedback %}
+        <p>Do you have any thoughts or opinions on the matter? <a href="mailto:ryan@ryanarana.com?subject=Game a Week">Email me</a>! Or
+                <a class="twitter-mention-button" href="https://twitter.com/intent/tweet?screen_name=aranasaurus&count=none">
+                    tweet at me!
+                </a>
+                <script type="text/javascript">
+                    window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return}js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})}(document,"script","twitter-wjs"));
+                </script>
+            </p>
+        {% endif %}
+    </div>
 
-	<p class="meta">Posted on <span class="postdate">{{ page.date | date: "%b %d, %Y" }}</span></p>
+
+	<p class="meta">Posted at <span class="postdate">{{ page.date | date: "%H:%m on %b %d, %Y" }}</span></p>
 
 </article>

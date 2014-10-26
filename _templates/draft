@@ -1,4 +1,7 @@
 ---
 layout: {{ layout }}
 title: {{ title }}
+request_feedback: false
 ---
+
+<!-- more -->
