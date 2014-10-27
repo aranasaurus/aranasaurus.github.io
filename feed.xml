@@ -7,6 +7,17 @@
 		<atom:link href="http://aranasaurus.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Week 1, Day 3</title>
+				<description>&lt;p&gt;Today I did more in-depth reading about the Lua-C interoperability and some coding, trying things out. My thoughts from day 2 still stand. Next up
+will be making sure I can get that stuff working in my iOS project and then actually getting started on the C++ parts of the engine.&lt;/p&gt;
+
+</description>
+				<pubDate>Mon, 27 Oct 2014 02:39:12 -0700</pubDate>
+				<link>http://aranasaurus.com/2014/10/27/week-1-day-3/</link>
+				<guid isPermaLink="true">http://aranasaurus.com/2014/10/27/week-1-day-3/</guid>
+			</item>
+		
+			<item>
 				<title>Week 1, Day 2</title>
 				<description>&lt;p&gt;Today I wanted to get it figured out where the line will be drawn as to which logic is written in C/C++ and what
 gets done in Lua.&lt;/p&gt;
