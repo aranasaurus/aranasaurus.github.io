@@ -7,6 +7,27 @@
 		<atom:link href="http://aranasaurus.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Game a Week, on Second Thought...</title>
+				<description>&lt;p&gt;After just a few days of the game a week challenge I realized that I’m not ready to start that yet. Not if I want
+to succeed at it anyway, and not if I want to use my own engine as opposed to Unity or something similar.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;I still think the process I was going through of documenting my thought process and progress was helpful and
+I’m going to continue to do that while I make my engine and use it to make those first few simple clones
+that I was going to do for the Game a Week challenge.&lt;/p&gt;
+
+&lt;p&gt;In other words, I’m not gonna do Game a Week for a few more weeks, but I &lt;em&gt;am&lt;/em&gt; gonna keep posting stuff here
+similar to my first few Game a Week posts. I’ll probably go back and edit those posts a little too and structure
+them as generic development posts as opposed to Game a Week journal entries. You know… for posterity.&lt;/p&gt;
+
+</description>
+				<pubDate>Thu, 30 Oct 2014 16:42:16 -0700</pubDate>
+				<link>http://aranasaurus.com/2014/10/30/game-a-week-on-second-thought/</link>
+				<guid isPermaLink="true">http://aranasaurus.com/2014/10/30/game-a-week-on-second-thought/</guid>
+			</item>
+		
+			<item>
 				<title>Week 1, Day 3</title>
 				<description>&lt;p&gt;Today I did more in-depth reading about the Lua-C interoperability and some coding, trying things out. My thoughts from day 2 still stand. Next up
 will be making sure I can get that stuff working in my iOS project and then actually getting started on the C++ parts of the engine.&lt;/p&gt;
