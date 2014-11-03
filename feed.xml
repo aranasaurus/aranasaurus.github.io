@@ -92,18 +92,7 @@ them as generic development posts as opposed to Game a Week journal entries. You
 			</item>
 		
 			<item>
-				<title>Week 1, Day 3</title>
-				<description>&lt;p&gt;Today I did more in-depth reading about the Lua-C interoperability and some coding, trying things out. My thoughts from day 2 still stand. Next up
-will be making sure I can get that stuff working in my iOS project and then actually getting started on the C++ parts of the engine.&lt;/p&gt;
-
-</description>
-				<pubDate>Mon, 27 Oct 2014 02:39:12 -0700</pubDate>
-				<link>http://aranasaurus.com/2014/10/27/week-1-day-3/</link>
-				<guid isPermaLink="true">http://aranasaurus.com/2014/10/27/week-1-day-3/</guid>
-			</item>
-		
-			<item>
-				<title>Week 1, Day 2</title>
+				<title>Thoughts on Engine Design and Implementation</title>
 				<description>&lt;p&gt;Today I wanted to get it figured out where the line will be drawn as to which logic is written in C/C++ and what
 gets done in Lua.&lt;/p&gt;
 
@@ -183,8 +172,8 @@ functionality along these lines tonight after the kids go to bed and/or tomorrow
 
 </description>
 				<pubDate>Sat, 25 Oct 2014 19:21:16 -0700</pubDate>
-				<link>http://aranasaurus.com/2014/10/25/week-1-day-2/</link>
-				<guid isPermaLink="true">http://aranasaurus.com/2014/10/25/week-1-day-2/</guid>
+				<link>http://aranasaurus.com/2014/10/25/thoughts-on-engine-design-and-implementation/</link>
+				<guid isPermaLink="true">http://aranasaurus.com/2014/10/25/thoughts-on-engine-design-and-implementation/</guid>
 			</item>
 		
 			<item>
