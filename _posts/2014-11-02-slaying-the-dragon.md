@@ -22,7 +22,7 @@ So I grabbed a copy of [_A Tour of C++_][tour-of-cpp] to get some familiarity wi
 all of my C++ books are pretty old. Learning C++ has been a long running challenge for me and
 this project is my chance to finally slay that dragon.
 
-I started trying to learn C++ so back in high school and had limited success. I started with
+I started trying to learn C++ back in high school and had limited success. I started with
 a Borland C++ Compiler user's manual, which was probably my first mistake. I tried several times
 over the years and a made a few small things, but never kept with it long enough for the
 intricacies of the language to really sink in. I've been doing Objective-C professionally for
