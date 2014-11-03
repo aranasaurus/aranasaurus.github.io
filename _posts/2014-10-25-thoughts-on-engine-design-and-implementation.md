@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Week 1, Day 2"
+title: "Thoughts on Engine Design and Implementation"
 date: 2014-10-25T19:21:16-07:00
-tags: game-a-week, game-dev, SDL, week-1
+tags: game-dev, SDL
 request_feedback: true
 ---
 
