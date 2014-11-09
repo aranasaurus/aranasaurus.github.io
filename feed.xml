@@ -69,7 +69,7 @@ in a way that made it far more loosely coupled, which is an improvement in stabi
 a single test.&lt;/p&gt;
 
 </description>
-				<pubDate>Sat, 08 Nov 2014 23:02:49 -0800</pubDate>
+				<pubDate>Sat, 08 Nov 2014 23:05:24 -0800</pubDate>
 				<link>http://aranasaurus.com/2014/11/08/testability/</link>
 				<guid isPermaLink="true">http://aranasaurus.com/2014/11/08/testability/</guid>
 			</item>
@@ -93,7 +93,7 @@ C++11.&lt;/p&gt;
 all of my C++ books are pretty old. Learning C++ has been a long running challenge for me and
 this project is my chance to finally slay that dragon.&lt;/p&gt;
 
-&lt;p&gt;I started trying to learn C++ so back in high school and had limited success. I started with
+&lt;p&gt;I started trying to learn C++ back in high school and had limited success. I started with
 a Borland C++ Compiler user’s manual, which was probably my first mistake. I tried several times
 over the years and a made a few small things, but never kept with it long enough for the
 intricacies of the language to really sink in. I’ve been doing Objective-C professionally for
