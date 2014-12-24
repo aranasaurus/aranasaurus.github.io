@@ -110,13 +110,13 @@ h3 {
 
 /*** Structure ***/
 #page {
-	width: 500px;
+	width: 660px;
 	margin: 0 auto;
 	position: relative;
 }
 
 #header {
-	width: 500px;
+	width: 660px;
 	margin: 40px auto 50px auto;
 }
 #header h1 {
@@ -128,7 +128,7 @@ h3 {
 }
 
 #footer {
-	width: 500px;
+	width: 660px;
 	margin: auto;
 	padding-top: 10px;
 	font-size: 0.85em;
@@ -136,7 +136,7 @@ h3 {
 }
 
 #content {
-	width: 500px;
+	width: 660px;
 	margin: 0 auto;
 }
 
@@ -227,7 +227,7 @@ img.center {
 
 
 /*** Media Queries ***/
-@media all and (max-width: 870px) {
+@media all and (max-width: 970px) {
 
 	#page, #header, #content, #footer {
 		width: inherit;
