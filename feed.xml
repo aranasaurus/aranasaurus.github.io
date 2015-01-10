@@ -50,7 +50,7 @@ math. I’m actually really happy that Löve doesn’t have this as this time my
 collision detection actually stuck and I really feel like I learned something; like I got over a hurdle that I’ve stumbled over many times in my
 past. I found a lot of help on this subject in &lt;a href=&quot;https://www.youtube.com/playlist?list=PLW3Zl3wyJwWOpdhYedlD-yCB7WQoHf-My&quot; title=&quot;Math for Game Developers - youtube&quot;&gt;these videos&lt;/a&gt; and this &lt;a href=&quot;http://higherorderfun.com/blog/2012/06/03/math-for-game-programmers-05-vector-cheat-sheet&quot; title=&quot;Vector Cheat Sheet&quot;&gt;cheatsheet&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;One thing I spent a lot of time on during the jam (and ultimately ended up removing after the jam, unfortunately) was the color combination code.
+&lt;p&gt;Another thing I spent a lot of time on during the jam (and ultimately ended up removing after the jam, unfortunately) was the color combination code.
 As you may know in the RGB space adding yellow and blue does not get you green (it gets you white). I wrote code to convert colors to CMYK then
 do the combination and then convert back to RGB (based on this &lt;a href=&quot;http://stackoverflow.com/a/15244944/52561&quot; title=&quot;Natural Color Combination - Stack Overflow&quot;&gt;Stack Overflow answer&lt;/a&gt;). I ended up removing it later on because
 with only 6 colors it makes more sense to hand pick the colors and then do the logic of combining them manually so that I end up with better colors
@@ -74,7 +74,7 @@ want sticking around in a more permanent project. Also: bug fixes and memory lea
 I’ve ever done any GLSL stuff and it was a great learning experience. I’ll do a full post about that in the near future. I’m pretty darn happy
 with the look as it stands, I still need some font work and a better ship sprite, but overall it looks pretty damn good for programmer art.&lt;/p&gt;
 
-&lt;p&gt;I’ve added keyboard controls since the jam as well. They suck, but that’s the nature of this style game, you pretty much just need to have a
+&lt;p&gt;I’ve added keyboard controls since the jam as well. They suck, but that’s the nature of this style of game, you pretty much just need to have a
 gamepad to really make it feel right.&lt;/p&gt;
 
 &lt;p&gt;The other thing I’ve spent a lot of time on since the jam is nailing down exactly what I want actually in the game, and I still haven’t finished
@@ -99,14 +99,14 @@ used to reflect light, or to split light into components with different polariza
 
 &lt;p&gt;My &lt;a href=&quot;https://github.com/aranasaurus/prism-game/issues&quot; title=&quot;Prism Issues - GitHub&quot;&gt;issues list&lt;/a&gt; gives a pretty good idea of where I want to go with the game, but what I’m focusing on in the short term is getting
 the power-ups and enemies spawning so that the game really starts to feel like a game! I’ve had a bit of Analysis Paralysis the past week or so and
-keep putting off doing the power-ups because I’m having a hard time figuring out how best to implement power-ups. It’s a much more difficult problem
-to solve than I thought it would be. I may end up writing a post about that in the near future as well, once I settle on how to do it and get it done.&lt;/p&gt;
+keep putting off doing the power-ups because I’m having a hard time figuring out how best to implement them. It’s a much more difficult problem
+to solve than I thought it would be! I may end up writing a post about that in the near future as well, once I settle on how to do it and get it done.&lt;/p&gt;
 
 &lt;p&gt;I’ll get back to updating this site on a more regular basis again now, and I’m sure Prism will be a frequent topic of these posts in the near-term at
 least.&lt;/p&gt;
 
 </description>
-				<pubDate>Tue, 23 Dec 2014 17:47:33 -0800</pubDate>
+				<pubDate>Tue, 23 Dec 2014 19:23:19 -0800</pubDate>
 				<link>http://aranasaurus.com/2014/12/23/ld31/</link>
 				<guid isPermaLink="true">http://aranasaurus.com/2014/12/23/ld31/</guid>
 			</item>
