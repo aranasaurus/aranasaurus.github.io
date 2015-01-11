@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <title>Pac-Man Ghost AI Demo</title>
+  <meta name="viewport" content="width=device-width">
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="/assets/css/style.css" rel="stylesheet" />
+  <link href="/assets/css/colors-light.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+
+
+  <header id="header">
+    <h1><a href="/">The Aranasaurus Nest</a></h1>
+    <p>Where @aranasaurus keeps his code and things</p>
+  </header>
+
+
+
+  <div id="page">
+
+
+
+    <div id="sidebar">
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/archives">Archive</a></li>
+          <!--<li><a href="/about">About</a></li>-->
+          <li><a href="http://twitter.com/aranasaurus">Twitter</a></li>
+          <li><a href="http://github.com/aranasaurus">GitHub</a></li>
+          <li><a href="/feed.xml">RSS Feed</a></li>
+        </ul>
+      </nav>
+    </div>
+
+
+
+    <div id="content">
+      <article class="post">
+
+	
+		<h1><a href="/2015/01/10/pac-man-ghost-ai-visualisation/">Pac-Man Ghost AI Demo</a></h1>
+	
+
+	<div class="post-content">
+        <p>Have you ever noticed how the ghosts in Pac-Man don’t all chase him in the same fashion? Does that kind of thing
+pique your interest?  Well, it does mine! So I built a thing that visualizes their AI strategies and that’s what
+this post is going to be all about.</p>
+
+<!-- more -->
+
+<h1 id="history">History</h1>
+
+<p>I forget why I went Googling for the ghost AI’s once many years ago, but when I did I found <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html" title="The Pac-Man Dossier">The Pac-Man Dossier</a>,
+and subsequently read it cover to cover (or top to bottom, as the case may be). I found the info in Chapters
+2-4 to be a fantastic study on game design in general, but more specifically game <em>AI</em>. The fact that this
+game is still challenging and fun to this day is a testament to just how well-tuned these AI algorithms are
+(a nod should also be given to all of the other aspects of the game design as well, but I digress). With
+just these 4 ghosts the developers have been able to keep Pac-Man players on their toes for 30+ years.</p>
+
+<p>More recently though, I was going through the <a href="//www.khanacademy.org/computing/computer-science/algorithms/intro-to-algorithms/a/route-finding" title="Route Finding, Computer Science - Khan Academy">Route Finding</a> lesson on <a href="//www.khanacademy.org" title="Khan Academy">Khan Academy</a> and it
+used Pac-Man and his paranormal buddies as an example use case for path/route finding. I knew from my time
+with the <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html" title="The Pac-Man Dossier">dossier</a> though, this was not <em>entirely</em> accurate. The ghosts don’t actually do any path finding. They just measure
+distance, in tiles from their current (more accurately, their next) tile to their target tile. This measurement
+ignores walls and other obstacles, it’s an “as the crow flies” measurement, which, strictly speaking, is not
+path finding at all.</p>
+
+<p><a href="//xkcd.com/386/"><img src="//imgs.xkcd.com/comics/duty_calls.png" alt="Wrong on the internet!" title="xkcd - Wrong on the Internet" /></a></p>
+
+<h1 id="the-demo">The Demo</h1>
+
+<p>One of the cool things about <a href="//www.khanacademy.org" title="Khan Academy">Khan Academy</a> is that they have a platform for creating interactive demos which
+can be forked (or Split Off, as they call it), shared, even embedded into pages… like this:</p>
+
+<h2><a href="http://www.khanacademy.org/computer-programming/pac-man-ghost-ai-visualisation/6163767378051072">Pac-Man Ghost AI Visualization</a></h2>
+<script src="http://www.khanacademy.org/computer-programming/pac-man-ghost-ai-visualisation/6163767378051072/embed.js?editor=no&amp;buttons=yes&amp;author=yes&amp;embed=yes"></script>
+<p style="padding:4px">Made using: <a href="http://www.khanacademy.org/computer-programming">Khan Academy Computer Science</a>.</p>
+
+<p>I made that demo/visualization, not (solely) because “Someone is wrong on the internet”, but because I thought
+it’d be a fun exercise to write and, if I was successful, a fun little program to show the elegance of the
+Pac-Man ghost AI algorithms without having to read the whole Dossier.</p>
+
+<p><strong>NOTE</strong>: You can view the (javascript/<a href="//processingjs.org" title="Processing.js">processing.js</a>) code, which is pretty well commented, and even fork it
+and make changes to it if you want by clicking the “View on Khan Academy” button above.</p>
+
+<h2 id="graphics">Graphics</h2>
+
+<p>The demo runs the AI algorithms for each ghost as laid out in the <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html" title="The Pac-Man Dossier">dossier</a> and then renders some extra graphics to show
+the information they used/calculated to make their choices of where to go:</p>
+
+<ul>
+  <li>A tile outline of each ghost’s color which represents that ghost’s current target tile.</li>
+  <li>A transparent representation of the ghost and the direction it will go when it gets to the next tile. The
+ ghosts always plan their moves one tile in advance.</li>
+  <li>Lightly outlined tile(s) with a number in it. These tiles represent the tiles that the ghost considered when
+ choosing the direction to go in the next tile. The numbers represent the distance from that tile to that ghost’s
+ current target tile.</li>
+</ul>
+
+<p>The demo simulation runs by tile. Whereas the game shows the characters runing fluidly between the tiles, the
+algorithms themselves only care about the tile the character is in, so making it advance per tile made it easy
+to see how things go step by step.</p>
+
+<h2 id="controls">Controls</h2>
+
+<p>You can use the arrow keys (or WASD) to move Pac-Man step by step through the simulation, or if you hold Shift
+and press the movement keys, you can change the direction that Pac-Man is facing and force all of the ghosts to
+recalculate their target tile. This is important to note because you’ll notice that the target tiles don’t
+update themselves every step. This is because the ghosts only update their target tile when they have a choice
+to make, and since they can never go backward, they only have a choice when they’re at an intersection in the
+maze. This also allows you to see how you can “control” the paths of some of the ghosts at certain points.</p>
+
+<p>You can also use the 1-4 number keys (or the first letter of each ghost’s name: Blinky, Pinky, Inky, Clyde) to
+toggle the visibility of each ghost’s decision making graphics. The target tile will always be visible, this
+refers only to the numbers and the next tile graphics.</p>
+
+<h1 id="how-it-works">How It Works</h1>
+
+<h2 id="first-a-bit-about-pac-man">First, a bit about Pac-Man</h2>
+
+<p>For those that haven’t read through the <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html" title="The Pac-Man Dossier">dossier</a> I’d like to give a brief overview of a few points about how the
+game works. In playing the game you may have noticed that the ghosts don’t just chase Pac-Man the whole time
+(regardless of their strategy for getting <em>to</em> him), but sometimes they actually run <em>away</em> from him even if 
+Pac-Man hasn’t eaten an energizer dot. This is because the ghosts have three distinct modes that they operate
+in, depending on various other factors in the game.</p>
+
+<p>Here’s a quote from the <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html#CH2_Modus_Operandi" title="The Pac-Man Dossier">dossier</a> that summarizes the three modes quite nicely:</p>
+
+<blockquote>
+  <p>Ghosts have three mutually-exclusive modes of behavior they can be in during play: chase, scatter, and frightened. Each mode has a different objective/goal to be carried out:</p>
+</blockquote>
+
+<blockquote>
+  <ol>
+    <li><strong>CHASE</strong>—A ghost’s objective in chase mode is to find and capture Pac-Man by hunting him down through the maze. Each ghost exhibits unique behavior when chasing Pac-Man, giving them their different personalities: Blinky (red) is very aggressive and hard to shake once he gets behind you, Pinky (pink) tends to get in front of you and cut you off, Inky (light blue) is the least predictable of the bunch, and Clyde (orange) seems to do his own thing and stay out of the way.</li>
+    <li><strong>SCATTER</strong>—In scatter mode, the ghosts give up the chase for a few seconds and head for their respective home corners. It is a welcome but brief rest—soon enough, they will revert to chase mode and be after Pac-Man again.</li>
+    <li><strong>FRIGHTENED</strong>—Ghosts enter frightened mode whenever Pac-Man eats one of the four energizers located in the far corners of the maze. During the early levels, the ghosts will all turn dark blue (meaning they are vulnerable) and aimlessly wander the maze for a few seconds. They will flash moments before returning to their previous mode of behavior.</li>
+  </ol>
+</blockquote>
+
+<p>Another important note to go along with that is that they can never reverse direction… except when they
+switch between the above modes. They can also change their movement <em>speed</em> at certain numbers of remaining
+dots in the level.</p>
+
+<p>There are other finer points of detail in the <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html" title="The Pac-Man Dossier">dossier</a>, but I think that should cover what we need to know
+for this project.</p>
+
+<h2 id="the-ghosts-and-their-target-tiles">The Ghosts and their target tiles</h2>
+
+<p>As previously stated the ghosts only update their target tile at intersections in the maze. This target
+tile calculation is really where the difference in behavior comes from. Here’s a brief explanation of each
+of their target tile algorithms (in chase mode). For more in-depth analysis check out <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html#Chapter_3" title="The Pac-Man Dossier">Chapters 3-4</a>
+in the <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html" title="The Pac-Man Dossier">dossier</a> or the <a href="//www.khanacademy.org/computer-programming/pac-man-ghost-ai-visualisation/6163767378051072" title="Pac-Man Ghost AI Visualization - Khan Academy">source code</a> for the demo.</p>
+
+<ul>
+  <li><strong>Blinky</strong> - The red ghost is the most straight forward. Blinky’s target tile is always Pac-Man’s current tile.</li>
+  <li><strong>Pinky</strong> - The pink ghost is pretty straight forward too. Pinky’s target tile is always a tile 4 tiles ahead
+ of Pac-Man’s current tile. See the note below about the bug which is replicated in the demo.</li>
+  <li><strong>Inky</strong> - The blue ghost takes a three step process to figure out its target tile:
+    <ol>
+      <li>Find the tile 2 tiles in front of Pac-Man.</li>
+      <li>Find the vector between Blinky and the tile in step 1.</li>
+      <li>Double the length of that vector. The other end of that vector is Inky’s new target tile.</li>
+    </ol>
+  </li>
+  <li><strong>Clyde</strong> - The orange ghost has two different modes for picking his next target tile. He switches between these
+ modes based on his proximity to Pac-Man:
+    <ul>
+      <li>When Clyde is within 8 tiles of Pac-Man: Clyde targets a tile just off the maze at the bottom left.</li>
+      <li>When Clyde is farther than 8 tiles away from Pac-Man: Clyde targets Pac-Man’s tile, the same way Blinky
+does.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>NOTE</strong>: Pinky’s and Inky’s “<em>x</em> tiles in front of Pac-Man” measurements work as you’d expect in every direction
+ except for up. There was a bug in the original game that when they did this measurement in the up direction
+ they actually measured <em>x</em> tiles up <strong>AND</strong> <em>x</em> tiles to the left. This bug is replicated in the demo (on
+ purpose).</p>
+
+<h2 id="differences-from-the-game-in-the-demo">Differences from the game in the demo</h2>
+
+<p>I really wanted this thing to be as focused on the Chase mode strategies of the ghosts as possible. In order
+to do that I made the following choices:</p>
+
+<ol>
+  <li>There are no pellets. The pellets are very important for the game, but not so much for the chase mode 
+ strategies of the ghosts. Also I really didn’t want the added visual clutter.</li>
+  <li>There are no mode or speed changes. I wanted to focus on the chase mode strategies specifically, since
+ the other modes are relatively uninteresting. Since there are no pellets there are also no speed changes.</li>
+  <li>No collision detection between ghosts and Pac-Man. I didn’t want this to be a playable version of the
+ game so the death sequence just didn’t make a lot of sense to try and imitate and there’s a handy Restart
+ button for anytime you want to reset everything. I may go back and add some kind of messaging when a ghost
+ touches Pac-Man later, but for now it seems fine without it.</li>
+  <li>Tile based movement. The real Pac-Man runs fluidly at so many frames per second, and the characters all
+ move from tile to tile pixel by pixel. I wanted to be able to show how things are done step by step and the
+ algorithms are all tile based so I decided to just advance the game world by one step every time Pac-Man
+ enters a new tile. There are some edge cases where this means that this demo will behave differently from
+ the actual game (like <a href="//home.comcast.net/~jpittman2/pacman/pacmandossier.html#CH3_Just_Passing_Through" title="The Pac-Man Dossier">here</a>), but I figured this was a trade off I was willing to
+ make.</li>
+  <li>Distances for the algorithms are scaled. In the actual game the mazes have more tiles in them than in
+ the demo, so for my implementation of the algorithms I scale the distances used in them to account for that.</li>
+</ol>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Turns out I was definitely right about the fun to write part. Whether or not it’s fun <em>to play</em> or demonstrates
+the AI in an easy to understand fashion, I’ll let you be the judge of. I hope it’s as fun for everyone else to
+play around with as it is for me, because every time I open the damn thing I end up running Pac-Man around for
+way more time than I intended to! Therefor, I’m going to consider the project a success overall.</p>
+
+
+        <p class="meta">Posted by <a href="http://twitter.com/aranasaurus">Ryan</a> at <span class="postdate">15:01 on Jan 10, 2015</span></p>
+    </div>
+
+    
+    <hr />
+    <p>Do you have any thoughts or opinions on the matter? <a href="mailto:ryan@ryanarana.com?subject=Pac-Man Ghost AI Demo">Email me</a>! Or
+        <a class="twitter-mention-button" href="https://twitter.com/intent/tweet?screen_name=aranasaurus&count=none">
+            tweet at me!
+        </a>
+        <script type="text/javascript">
+            window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return}js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})}(document,"script","twitter-wjs"));
+        </script>
+    </p>
+    
+
+</article>
+
+    </div>
+
+
+
+  </div>
+
+
+
+  <footer id="footer">
+    <p class="copyright">Copyright &copy; 2015 aranasaurus.com, theme by <a href="http://www.webmaster-source.com">Matt Harzewski</a></p>
+  </footer>
+
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script src="/assets/js/jquery.mobilemenu.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $('#sidebar nav ul').mobileMenu({'topOptionText': 'Menu', 'prependTo': '#sidebar nav'});
+    });
+  </script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-56022486-1', 'auto');
+ga('send', 'pageview');
+
+  </script>
+
+
+</body>
+</html>
