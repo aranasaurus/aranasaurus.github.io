@@ -20,8 +20,8 @@ game is still challenging and fun to this day is a testament to just how well-tu
 just these 4 ghosts the developers have been able to keep Pac-Man players on their toes for 30+ years.
 
 More recently though, I was going through the [Route Finding][route-finding] lesson on [Khan Academy][khan] and it
-used Pac-Man and his paranormal buddies as an example use case for path/route finding, which I knew from my time
-with the [dossier] was not *entirely* accurate. The ghosts don't actually do any path finding. They just measure
+used Pac-Man and his paranormal buddies as an example use case for path/route finding. I knew from my time
+with the [dossier] though, this was not *entirely* accurate. The ghosts don't actually do any path finding. They just measure
 distance, in tiles from their current (more accurately, their next) tile to their target tile. This measurement
 ignores walls and other obstacles, it's an "as the crow flies" measurement, which, strictly speaking, is not
 path finding at all.
@@ -35,16 +35,16 @@ can be forked (or Split Off, as they call it), shared, even embedded into pages.
 
 <h2><a href="http://www.khanacademy.org/computer-programming/pac-man-ghost-ai-visualisation/6163767378051072">Pac-Man Ghost AI Visualization</a></h2> <script src="http://www.khanacademy.org/computer-programming/pac-man-ghost-ai-visualisation/6163767378051072/embed.js?editor=no&amp;buttons=yes&amp;author=yes&amp;embed=yes"></script> <p style="padding:4px">Made using: <a href="http://www.khanacademy.org/computer-programming">Khan Academy Computer Science</a>.</p> 
 
-That is the visualization I made, not because "Someone is wrong the internet", but because I thought it'd be a
-fun exercise to write and, if I was successful, a fun little program to show the elegance of the Pac-Man ghost
-AI algorithms without having to read the whole Dossier.
+I made that demo/visualization, not (solely) because "Someone is wrong on the internet", but because I thought
+it'd be a fun exercise to write and, if I was successful, a fun little program to show the elegance of the
+Pac-Man ghost AI algorithms without having to read the whole Dossier.
 
-__NOTE__: You can view the (javascript/[processing.js]) code, which is pretty well commented, and even fork it and make changes to it if you
-want by clicking the "View on Khan Academy" button.
+__NOTE__: You can view the (javascript/[processing.js]) code, which is pretty well commented, and even fork it
+and make changes to it if you want by clicking the "View on Khan Academy" button above.
 
 ## Graphics
 
-It runs the AI algorithms for each ghost as laid out in the [dossier] and renders some extra graphics to show
+The demo runs the AI algorithms for each ghost as laid out in the [dossier] and then renders some extra graphics to show
 the information they used/calculated to make their choices of where to go:
 
  * A tile outline of each ghost's color which represents that ghost's current target tile.
@@ -54,8 +54,9 @@ the information they used/calculated to make their choices of where to go:
  choosing the direction to go in the next tile. The numbers represent the distance from that tile to that ghost's
  current target tile.
 
-The simulation runs by tile. Whereas the game runs fluidly between the tiles, the algorithms themselves only care
-about the tiles, so making it advance per tile made it easy to see how things go step by step.
+The demo simulation runs by tile. Whereas the game shows the characters runing fluidly between the tiles, the
+algorithms themselves only care about the tile the character is in, so making it advance per tile made it easy
+to see how things go step by step.
 
 ## Controls 
 
