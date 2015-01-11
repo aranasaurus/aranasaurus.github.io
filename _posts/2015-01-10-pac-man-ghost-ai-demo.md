@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Pac-Man Ghost AI Demo"
+date: 2015-01-10T16:09:05-08:00
 request_feedback: true
 ---
 
