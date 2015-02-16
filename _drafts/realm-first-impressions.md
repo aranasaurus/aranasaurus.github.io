@@ -13,8 +13,56 @@ thought it'd be good to jot down my experience with it and my outlook on its fut
 
 # Wait, Realm? What's that?
 
-TODO: Give brief high-level overview. Throw some code samples showing a data model class, creating, editing, and 
-deleting an object of that class in/from a Realm.
+According to their [website][realm]: 
+
+> Realm is a mobile database: a replacement for SQLite & Core Data Realm can save you thousands of lines of code & weeks of work, and lets you craft amazing new user experiences.
+
+What attracts me to Realm is that it lets you build your data model using your objects and arrays in code. There's
+no separate object model schema file that you have to keep up to date separately from your classes that you use
+to actually interact with the data. Your classes are your schema. There's also very little boiler plate, which, in
+comparison to Core Data is straight up amaze-balls. It's also thread-safe. And queryable. And fast. And just dead
+simple to set up and use.
+
+Check this out:
+
+{% highlight swift %}
+class Dog: RLMObject {
+    dynamic var name = ""
+    dynamic var age = 0
+}
+
+let fido = Dog()
+fido.name = "Fido"
+fido.age = 5
+
+let rex = Dog()
+rex.name = "Rex"
+rex.age = 1
+
+let realm = RLMRealm.defaultRealm()
+realm.beginWriteTransaction()
+realm.addObjects([fido, rex])
+realm.commitWriteTransaction()
+
+// Rex and Fido are now persisted to disk and changes to their properties must be done within a
+// Realm transaction, and are persisted immediately after the transaction is commited including
+// from other threads!
+
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+    RLMRealm.defaultRealm().transactionWithBlock() {
+        for r in Dog.objectsWhere("age < 2") {
+            let d = r as Dog
+            d.name = "\(d.name), The Puppy"
+        }
+    }
+    
+    let rex = Dog.objectsWhere("name contains 'Rex'").firstObject() as Dog
+    println(rex.name) // "Rex, The Puppy"
+}
+
+{% endhighlight %}
+
+<p style="line-height: 0.5em;" /> <!-- TODO: Get rid of this when I have some time to look at my theme a bit -->
 
 # The App
 
