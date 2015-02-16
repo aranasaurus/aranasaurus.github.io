@@ -7,7 +7,7 @@ request_feedback: false
 I've been interested in [Realm][realm] for quite a while now, but hadn't really had a chance to look at it real
 closely. But it has popped up in different ways a bunch of times over the past couple of weeks, and I have a [personal
 project][ratings-app] that I think would be a good fit to try it out in. So that's what I did this weekend, and I
-thought it'd be good to jot down my experience with it and my outlook on its future in my app.
+thought it'd be good to jot down my experience with it.
 
 <!-- more -->
 
@@ -67,7 +67,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 # The App
 
 The app is fairly simple. It's a ratings journal. You take a picture of a thing, rate it, comment on it, attach
-some tags, maybe a location, and then save that to your device. Basically [Untappd](untappd) but for anything you
+some tags, maybe a location, and then save that to your device. Basically [Untappd][untappd] but for anything you
 can take a picture of and without all the reliance on the social media aspects.
 
 The data model for the app is super simple. There are two objects:
@@ -80,9 +80,9 @@ The data model for the app is super simple. There are two objects:
 I recently got this app up and running as a side project to get some experience writing a full app in Swift. I
 initially wrote the data layer in [CoreData][core-data] complete with using an [NSFetchedResultsController][nsfrc] for
 my table view and everything. But last night I spent an hour or two replacing all of that with [Realm Objects](http://realm.io/docs/cocoa/0.90.5/#models)
-and [Realm Notification Blocks][notifications]. The [docs][realm-docs] are pretty good and the tech itself is very straight forward,
-so there wasn't a lot of bashing my head into the wall... which might sound odd, if you've spent any time with
-CoreData.
+and [Realm Notification Blocks][notifications]. The [docs][realm-docs] are pretty good and the library itself is
+very straight forward, so there wasn't a lot of bashing my head into the wall... which might sound odd, if you've
+spent any time with CoreData.
 
 Adding the Realm framework to the project is super simple:
 
@@ -214,7 +214,7 @@ would kind of defeat the purpose.
 
 ## Replace NSFetchedResultsController Functionality
 
-Replacing the [NSFetchedResultsController][nsfetchedresultscontroll] functionality mostly consisted of *removing* code and adding one bit
+Replacing the [NSFetchedResultsController][nsfrc] functionality mostly consisted of *removing* code and adding one bit
 to the `viewDidLoad` method:
 
 {% highlight swift %}
@@ -231,7 +231,7 @@ This is *much* simpler than the 80 or so lines of code it replaced but it does l
 no animations for changes that are made to the tableView's rows. This is due to the fact that Realm's notifications
 currently notify you of two things:
 
-  * Something in the Realm has changed. That is, *anything* in the Realm changed. And there is easy way to get notified
+  * Something in the Realm has changed. That is, *anything* in the Realm changed. And there is no easy way to get notified
   of *what* changed or *how* it changed.
   * The Realm needs to be refreshed because a write transaction on another thread has been commited to the same file
   that this Realm is using.
