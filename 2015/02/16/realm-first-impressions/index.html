@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <title>Realm First Impressions</title>
+  <meta name="viewport" content="width=device-width">
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="/assets/css/style.css" rel="stylesheet" />
+  <link href="/assets/css/colors-light.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+
+
+  <header id="header">
+    <h1><a href="/">The Aranasaurus Nest</a></h1>
+    <p>Where @aranasaurus keeps his code and things</p>
+  </header>
+
+
+
+  <div id="page">
+
+
+
+    <div id="sidebar">
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/archives">Archive</a></li>
+          <!--<li><a href="/about">About</a></li>-->
+          <li><a href="http://twitter.com/aranasaurus">Twitter</a></li>
+          <li><a href="http://github.com/aranasaurus">GitHub</a></li>
+          <li><a href="/feed.xml">RSS Feed</a></li>
+        </ul>
+      </nav>
+    </div>
+
+
+
+    <div id="content">
+      <article class="post">
+
+	
+		<h1><a href="/2015/02/16/realm-first-impressions/">Realm First Impressions</a></h1>
+	
+
+	<div class="post-content">
+        <p>I’ve been interested in <a href="http://realm.io" title="Realm">Realm</a> for quite a while now, but hadn’t really had a chance to look at it real
+closely. But it has popped up in different ways a bunch of times over the past couple of weeks, and I have a <a href="https://github.com/aranasaurus/ratings-app" title="Ratings App">personal
+project</a> that I think would be a good fit to try it out in. So that’s what I did this weekend, and I
+thought it’d be good to jot down my experience with it.</p>
+
+<!-- more -->
+
+<h1 id="wait-realm-whats-that">Wait, Realm? What’s that?</h1>
+
+<p>According to their <a href="http://realm.io" title="Realm">website</a>: </p>
+
+<blockquote>
+  <p>Realm is a mobile database: a replacement for SQLite &amp; Core Data Realm can save you thousands of lines of code &amp; weeks of work, and lets you craft amazing new user experiences.</p>
+</blockquote>
+
+<p>What attracts me to Realm is that it lets you build your data model using your objects and arrays in code. There’s
+no separate object model schema file that you have to keep up to date separately from your classes that you use
+to actually interact with the data. Your classes are your schema. There’s also very little boiler plate, which, in
+comparison to Core Data is straight up amaze-balls. It’s also thread-safe. And queryable. And fast. And just dead
+simple to set up and use.</p>
+
+<p>Check this out:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">class</span> <span class="nl">Dog</span><span class="p">:</span> <span class="n">RLMObject</span> <span class="p">{</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="n">fido</span> <span class="o">=</span> <span class="n">Dog</span><span class="p">()</span>
+<span class="n">fido</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Fido&quot;</span>
+<span class="n">fido</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">let</span> <span class="n">rex</span> <span class="o">=</span> <span class="n">Dog</span><span class="p">()</span>
+<span class="n">rex</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Rex&quot;</span>
+<span class="n">rex</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">let</span> <span class="n">realm</span> <span class="o">=</span> <span class="n">RLMRealm</span><span class="p">.</span><span class="n">defaultRealm</span><span class="p">()</span>
+<span class="n">realm</span><span class="p">.</span><span class="n">beginWriteTransaction</span><span class="p">()</span>
+<span class="n">realm</span><span class="p">.</span><span class="n">addObjects</span><span class="p">([</span><span class="n">fido</span><span class="p">,</span> <span class="n">rex</span><span class="p">])</span>
+<span class="n">realm</span><span class="p">.</span><span class="n">commitWriteTransaction</span><span class="p">()</span>
+
+<span class="c1">// Rex and Fido are now persisted to disk and changes to their properties must be done within a</span>
+<span class="c1">// Realm transaction, and are persisted immediately after the transaction is commited including</span>
+<span class="c1">// from other threads!</span>
+
+<span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">RLMRealm</span><span class="p">.</span><span class="n">defaultRealm</span><span class="p">().</span><span class="n">transactionWithBlock</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="k">in</span> <span class="n">Dog</span><span class="p">.</span><span class="n">objectsWhere</span><span class="p">(</span><span class="s">&quot;age &lt; 2&quot;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="n">d</span> <span class="o">=</span> <span class="n">r</span> <span class="kt">as</span> <span class="n">Dog</span>
+            <span class="n">d</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;\(d.name), The Puppy&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">let</span> <span class="n">rex</span> <span class="o">=</span> <span class="n">Dog</span><span class="p">.</span><span class="n">objectsWhere</span><span class="p">(</span><span class="s">&quot;name contains &#39;Rex&#39;&quot;</span><span class="p">).</span><span class="n">firstObject</span><span class="p">()</span> <span class="kt">as</span> <span class="n">Dog</span>
+    <span class="n">println</span><span class="p">(</span><span class="n">rex</span><span class="p">.</span><span class="n">name</span><span class="p">)</span> <span class="c1">// &quot;Rex, The Puppy&quot;</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<h1 id="the-app">The App</h1>
+
+<p>The <a href="https://github.com/aranasaurus/ratings-app" title="Ratings App">app</a> is fairly simple. It’s a ratings journal. You take a picture of a thing, rate it, comment on it, attach
+some tags, maybe a location, and then save that to your device. Basically <a href="https://untappd.com/" title="Untappd">Untappd</a> but for anything you
+can take a picture of and without all the reliance on the social media aspects.</p>
+
+<p>The data model for the app is super simple. There are two objects:</p>
+
+<ol>
+  <li>Item - This is the main class it has properties for title, rating, date, comments, image, and tags.</li>
+  <li>Tag - This class just has a property for the tag name and an inverse relationship which backlinks to all <code>Items</code> that use the tag.</li>
+</ol>
+
+<p>If you’d like to follow along all of the source code for the app is available on <a href="https://github.com/aranasaurus/ratings-app" title="Ratings App">github</a>.</p>
+
+<h1 id="converting-from-coredata">Converting from CoreData</h1>
+
+<p>I recently got this app up and running as a side project to get some experience writing a full app in Swift. I
+initially wrote the data layer in <a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreData/cdProgrammingGuide.html" title="iOS Developer Library - Introduction to Core Data">CoreData</a> complete with using an <a href="https://developer.apple.com/library/ios/documentation/CoreData/Reference/NSFetchedResultsController_Class/" title="iOS Developer Library - NSFetchedResultsController">NSFetchedResultsController</a> for
+my table view and everything. But last night I spent an hour or two replacing all of that with <a href="http://realm.io/docs/cocoa/0.90.5/#models">Realm Objects</a>
+and <a href="http://realm.io/docs/cocoa/0.90.5/#notifications" title="Realm - Notifications">Realm Notification Blocks</a>. The <a href="http://realm.io/docs/cocoa/" title="Realm Cocoa Docs">docs</a> are pretty good and the library itself is
+very straight forward, so there wasn’t a lot of bashing my head into the wall… which might sound odd, if you’ve
+spent any time with CoreData.</p>
+
+<p>Adding the Realm framework to the project is super simple:</p>
+
+<ol>
+  <li>Drag n drop the framework file into the project and link it to the app target.</li>
+  <li>Link against libc++.dylib</li>
+  <li>Copy over the RLMSupport.swift file for a couple of Swift niceties.</li>
+</ol>
+
+<p>See their <a href="http://realm.io/docs/cocoa/" title="Realm Cocoa Docs">docs</a> for details and other configuration info.</p>
+
+<h2 id="data-objects">Data Objects</h2>
+
+<p>I started off by replacing my <code>NSManagedObject</code> subclasses with <code>[RLMObject](http://realm.io/docs/cocoa/0.90.5/api/Classes/RLMArray.html)</code> subclasses and getting rid of the stuff
+I didn’t need anymore: Bye-bye <code>ratings-app.xcdatamodeld</code>, <code>class func entityName() -&gt; String</code> functions, and a bunch
+of crap from my <code>AppDelegate</code>! Changing out the superclass for my data object classes wasn’t difficult at all, mostly
+just had to change from <code>@NSManaged</code> to <code>dynamic</code> for all of my properties and then use a <a href="http://realm.io/docs/cocoa/0.90.5/api/Classes/RLMArray.html">RLMArray</a> on the <code>Item</code>
+class for <code>Tags</code> and a <a href="http://realm.io/docs/cocoa/0.90.5/#inverse-relationships">backlink</a> on <code>Tag</code> to get all <code>Items</code> that link to it. The way they handle that is
+pretty cool, and a bit easier to understand than the CoreData way, even if it is technically more code (and thankfully
+less <code>notcode</code>).</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">class</span> <span class="nl">Item</span><span class="p">:</span> <span class="n">RLMObject</span> <span class="p">{</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">guid</span> <span class="o">=</span> <span class="bp">NSUUID</span><span class="p">().</span><span class="n">UUIDString</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">imagePath</span> <span class="o">=</span> <span class="s">&quot;default.png&quot;</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="nl">rating</span><span class="p">:</span> <span class="n">Float</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">ratingDate</span> <span class="o">=</span> <span class="bp">NSDate</span><span class="p">()</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">comments</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">tags</span> <span class="o">=</span> <span class="n">RLMArray</span><span class="p">(</span><span class="nl">objectClassName</span><span class="p">:</span> <span class="n">Tag</span><span class="p">.</span><span class="n">className</span><span class="p">())</span>
+
+    <span class="kr">override</span> <span class="k">class</span> <span class="k">func</span> <span class="n">primaryKey</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;guid&quot;</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nl">image</span><span class="p">:</span> <span class="bp">UIImage</span><span class="o">?</span> <span class="p">{</span>
+        <span class="kr">get</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="n">img</span> <span class="o">=</span> <span class="bp">UIImage</span><span class="p">(</span><span class="nl">contentsOfFile</span><span class="p">:</span> <span class="n">imagePath</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">img</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="bp">UIImage</span><span class="p">(</span><span class="nl">named</span><span class="p">:</span> <span class="s">&quot;default.png&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Other stuff...</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nl">Tag</span><span class="p">:</span> <span class="n">RLMObject</span> <span class="p">{</span>
+    <span class="n">dynamic</span> <span class="k">var</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">var</span> <span class="nl">items</span><span class="p">:</span> <span class="p">[</span><span class="n">Item</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">linkingObjectsOfClass</span><span class="p">(</span><span class="n">Item</span><span class="p">.</span><span class="n">className</span><span class="p">(),</span> <span class="nl">forProperty</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">)</span> <span class="kt">as</span> <span class="p">[</span><span class="n">Item</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<h2 id="update-viewcontroller-code">Update ViewController Code</h2>
+
+<p>I tried to put most of my <code>CoreData</code> specific code into my <code>DataStore</code> class, but inevitably some of the <code>ViewController</code>
+code ends up with some <code>CoreData</code> specific stuff in it, like a reference to the <code>NSManagedObjectContext</code> and calls to its
+<code>save</code> method. Realm is no different, really. I started with a reference to the <code>RLMRealm</code> object on the <code>ViewControllers</code>
+so that I can easily fire off transactions when I need to edit the data (though I’ve now gone back and refactored that
+code to take it out of the VC, more on that later). Because Realm is entirely transaction based, anytime you need to edit
+a property on an object that is stored in a Realm, you have to do so within a Realm transaction. Thankfully these are very
+easy to use:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">// Other ViewControllery stuff..</span>
+
+<span class="k">let</span> <span class="n">item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">]</span>
+<span class="n">realm</span><span class="p">.</span><span class="n">transactionWithBlock</span> <span class="p">{</span>
+    <span class="n">item</span><span class="p">.</span><span class="n">comments</span> <span class="o">=</span> <span class="n">textField</span><span class="p">.</span><span class="n">text</span>
+<span class="p">}</span>
+
+<span class="c1">// Other ViewControllery stuff..</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<p>The ease of this had me thinking about whether or not my separate <code>DataStore</code> class was even necessary. It really didn’t
+feel like it was… so I removed it. At first I just moved all of its implementation to just be in-lined in the VCs because
+it was mostly just wrapping some functionality into a Realm transaction. Like so:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="p">@</span><span class="kt">IBAction</span> <span class="k">func</span> <span class="n">ratingChange</span><span class="p">(</span><span class="nl">sender</span><span class="p">:</span> <span class="bp">UISlider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="n">realm</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">realm</span> <span class="p">{</span>
+        <span class="n">realm</span><span class="p">.</span><span class="n">transactionWithBlock</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">item</span><span class="p">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">sender</span><span class="p">.</span><span class="n">value</span>
+            <span class="n">item</span><span class="p">.</span><span class="n">ratingDate</span> <span class="o">=</span> <span class="bp">NSDate</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<p>After I had everything working I decided to refactor a little and try to make it so that the ViewControllers could be oblivious
+to the fact that this data was coming from Realm. First, I moved all data edits to methods on the data class that was being
+edited. For example, the rating change method above was in my <code>DetailViewController</code> and my <code>ItemTableViewCell</code>, I changed
+those to the following:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">// In the VCs:</span>
+<span class="p">@</span><span class="kt">IBAction</span> <span class="k">func</span> <span class="n">ratingChange</span><span class="p">(</span><span class="nl">sender</span><span class="p">:</span> <span class="bp">UISlider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">item</span><span class="p">.</span><span class="n">updateRating</span><span class="p">(</span><span class="n">sender</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// In Item.swift:</span>
+<span class="k">func</span> <span class="n">updateRating</span><span class="p">(</span><span class="nl">rating</span><span class="p">:</span> <span class="n">Float</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">realm</span> <span class="p">{</span>
+        <span class="n">realm</span><span class="p">.</span><span class="n">beginWriteTransaction</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">rating</span>
+    <span class="n">ratingDate</span> <span class="o">=</span> <span class="bp">NSDate</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">realm</span> <span class="p">{</span>
+        <span class="n">realm</span><span class="p">.</span><span class="n">commitWriteTransaction</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<p>This moved the data persistence logic out of my VC and into my data layer. I like that! So I did it some more. I added
+instance methods to <code>Item</code> so that instances could <code>save()</code> (which is an <a href="http://en.wikipedia.org/wiki/Merge_%28SQL%29" title="Wikipedia - Merge (SQL)">upsert</a>) and <code>delete()</code> themselves from
+whatever <code>Realm</code> they are attached to. This works great for my situation as I’m not using multiple Realms, if I were these
+would have to be made class methods and would have to take the <code>Realm</code> to save/delete them to/from as a parameter, which
+would kind of defeat the purpose.</p>
+
+<h2 id="replace-nsfetchedresultscontroller-functionality">Replace NSFetchedResultsController Functionality</h2>
+
+<p>Replacing the <a href="https://developer.apple.com/library/ios/documentation/CoreData/Reference/NSFetchedResultsController_Class/" title="iOS Developer Library - NSFetchedResultsController">NSFetchedResultsController</a> functionality mostly consisted of <em>removing</em> code and adding one bit
+to the <code>viewDidLoad</code> method:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="n">token</span> <span class="o">=</span> <span class="n">realm</span><span class="p">.</span><span class="n">addNotificationBlock</span> <span class="p">{</span> <span class="p">(</span><span class="nl">notification</span><span class="p">:</span> <span class="n">String</span><span class="o">!</span><span class="p">,</span> <span class="nl">rlm</span><span class="p">:</span> <span class="n">RLMRealm</span><span class="o">!</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">notification</span> <span class="o">==</span> <span class="n">RLMRealmDidChangeNotification</span> <span class="p">{</span>
+        <span class="nb">self</span><span class="p">.</span><span class="n">tableView</span><span class="p">.</span><span class="n">reloadData</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<p>This is <em>much</em> simpler than the 80 or so lines of code it replaced but it does lose out on some functionality: there’s
+no animations for changes that are made to the tableView’s rows. This is due to the fact that Realm’s notifications
+currently notify you of two things:</p>
+
+<ul>
+  <li>Something in the Realm has changed. That is, <em>anything</em> in the Realm changed. And there is no easy way to get notified
+  of <em>what</em> changed or <em>how</em> it changed.</li>
+  <li>The Realm needs to be refreshed because a write transaction on another thread has been commited to the same file
+  that this Realm is using.</li>
+</ul>
+
+<p>More <a href="https://github.com/realm/realm-cocoa/issues/601" title="github.com - Realm - Issue 601 - Support querying for the set of changed objects during Realm notifications">fine-grained notifications</a> are definitely something that is on their radar, so I’ll
+be looking forward to that coming in (hopefully) soon.</p>
+
+<h1 id="aftermath">Aftermath</h1>
+
+<p>That’s basically it for the CoreData -&gt; Realm transition, but I poked at a few other things along the way too.</p>
+
+<h2 id="migrations">Migrations</h2>
+
+<p>I experimented a little bit with Migrations as I was fiddling with the types of the properties I was storing and I like
+what they’ve done here. It’s really easy to understand and seemed powerful enough for anything I could think up. Here’s
+the tiny migration I made to change a property from being stored as <code>Float</code> to <code>Double</code>:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">// In AppDelegate&#39;s didFinishLaunching...</span>
+<span class="n">RLMRealm</span><span class="p">.</span><span class="n">setSchemaVersion</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nl">forRealmAtPath</span><span class="p">:</span> <span class="n">RLMRealm</span><span class="p">.</span><span class="n">defaultRealmPath</span><span class="p">())</span> <span class="p">{</span> <span class="n">migration</span><span class="p">,</span> <span class="n">oldSchemaVersion</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">oldSchemaVersion</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="p">{</span>
+        <span class="n">migration</span><span class="p">.</span><span class="n">enumerateObjects</span><span class="p">(</span><span class="n">Item</span><span class="p">.</span><span class="n">className</span><span class="p">())</span> <span class="p">{</span> <span class="n">oldObject</span><span class="p">,</span> <span class="n">newObject</span> <span class="k">in</span>
+            <span class="n">newObject</span><span class="p">[</span><span class="s">&quot;rating&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="n">oldObject</span><span class="p">[</span><span class="s">&quot;rating&quot;</span><span class="p">]</span> <span class="kt">as</span> <span class="n">Float</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<h2 id="some-extra-realm-extensions">Some extra Realm Extensions</h2>
+
+<p>I made myself a few little helpers and put them in a <code>RealmExtensions.swift</code> file. There’s not very many so I thought
+it’d be nice to go over them in detail here.</p>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<ul>
+  <li>RLMResults - <code>arraySortedByProperty(_:ascending:)</code><br />
+I saw this method name in the docs somewhere, but couldn’t find it in the header file, so I made an extension with a
+basic implementation of what I thought it probably did. Moreover, what I <em>wanted</em> a method with that name to do. It
+looks a little silly, but it’s very handy in practice, as it takes a <code>RLMResults</code> object which is Array-like, but not
+actually an Array, and returns a <code>[RLMObject]</code> which is, in fact, an Array.</li>
+</ul>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">extension</span> <span class="n">RLMResults</span> <span class="p">{</span>
+    <span class="k">func</span> <span class="n">arraySortedByProperty</span><span class="p">(</span><span class="nl">propertyName</span><span class="p">:</span> <span class="n">String</span><span class="o">!</span><span class="p">,</span> <span class="nl">ascending</span><span class="p">:</span> <span class="n">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">RLMObject</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">map</span><span class="p">(</span> <span class="nb">self</span><span class="p">.</span><span class="n">sortedResultsUsingProperty</span><span class="p">(</span><span class="n">propertyName</span><span class="p">,</span> <span class="nl">ascending</span><span class="p">:</span> <span class="n">ascending</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nl">r</span><span class="p">:</span> <span class="n">RLMObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RLMObject</span> <span class="k">in</span>
+            <span class="k">return</span> <span class="n">r</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<ul>
+  <li>RLMObject - save() / delete() <br />
+These are instance methods that make it so that an <code>RLMObject</code> can save/delete itself in the <code>RLMRealm</code> in its <code>realm</code>
+property or the default Realm if it doesn’t have one. Note that <code>add()</code> is doing an <code>addOrUpdateObject()</code> so it
+requires the RLMObject to have a <a href="http://realm.io/docs/cocoa/0.90.5/#customizing-models">primaryKey</a> set. Also note that <code>delete()</code> is a no-op if the object is
+not currently in a Realm, because what else is it supposed to do?</li>
+</ul>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">extension</span> <span class="n">RLMObject</span> <span class="p">{</span>
+    <span class="k">func</span> <span class="n">save</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">realm</span> <span class="o">??</span> <span class="n">RLMRealm</span><span class="p">.</span><span class="n">defaultRealm</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">r</span><span class="p">.</span><span class="n">beginWriteTransaction</span><span class="p">()</span>
+            <span class="n">r</span><span class="p">.</span><span class="n">addOrUpdateObject</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+            <span class="n">r</span><span class="p">.</span><span class="n">commitWriteTransaction</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">func</span> <span class="n">delete</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">realm</span> <span class="p">{</span>
+            <span class="n">r</span><span class="p">.</span><span class="n">beginWriteTransaction</span><span class="p">()</span>
+            <span class="n">r</span><span class="p">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+            <span class="n">r</span><span class="p">.</span><span class="n">commitWriteTransaction</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<ul>
+  <li>RLMObject - addNotificationBlock() / removeNotification() <br />
+These were just wrappers to make it so that I could add/remove Notification blocks to the default realm via my data
+object classes. They are simply one-line wrappers that forward on to their corresponding methods on the default
+<code>RLMRealm</code>.</li>
+</ul>
+
+<p style="line-height: 0.5em;" />
+<p><!-- TODO: Get rid of this when I have some time to look at my theme a bit --></p>
+
+<h1 id="final-thoughts">Final Thoughts</h1>
+
+<p>I was initially concerned with the bits where I have to call methods on the <code>RLMRealm</code> object before I can modify
+properties on my data object, but for one, I found a way to encapsulate that, and two, I don’t really think it needed
+to be encapsulated anyway after I found the <code>transactionWithBlock()</code> method.</p>
+
+<p>The biggest problem I ran into was definitely the way the Notifications work. It’s a great start in its current
+state but there will definitely need to be some way of finding out <em>what</em> changed and <em>how</em> before this feature
+is really ready for prime-time.</p>
+
+<p>All in all I’m really pretty excited by Realm and in my limited experience with it. It certainly makes the code nicer
+to look at and, more importantly, nicer to touch without fear that my whole ball of yarn is going to come unraveled.
+It’s still fairly early on in its life-cycle but I think the shiny parts outweigh the rough edges at this point and
+hey, I’ve already merged the “realm” branch into master on my app, so I’m gonna hop on this thing and see where it
+goes!</p>
+
+
+        <p class="meta">Posted by <a href="http://twitter.com/aranasaurus">Ryan</a> at <span class="postdate">00:02 on Feb 16, 2015</span></p>
+    </div>
+
+    
+    <hr />
+    <p>Do you have any thoughts or opinions on the matter? <a href="mailto:ryan@ryanarana.com?subject=Realm First Impressions">Email me</a>! Or
+        <a class="twitter-mention-button" href="https://twitter.com/intent/tweet?screen_name=aranasaurus&count=none">
+            tweet at me!
+        </a>
+        <script type="text/javascript">
+            window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return}js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})}(document,"script","twitter-wjs"));
+        </script>
+    </p>
+    
+
+</article>
+
+    </div>
+
+
+
+  </div>
+
+
+
+  <footer id="footer">
+    <p class="copyright">Copyright &copy; 2015 aranasaurus.com, theme by <a href="http://www.webmaster-source.com">Matt Harzewski</a></p>
+  </footer>
+
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script src="/assets/js/jquery.mobilemenu.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $('#sidebar nav ul').mobileMenu({'topOptionText': 'Menu', 'prependTo': '#sidebar nav'});
+    });
+  </script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-56022486-1', 'auto');
+ga('send', 'pageview');
+
+  </script>
+
+
+</body>
+</html>

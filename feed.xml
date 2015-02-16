@@ -7,6 +7,359 @@
 		<atom:link href="http://aranasaurus.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Realm First Impressions</title>
+				<description>&lt;p&gt;I’ve been interested in &lt;a href=&quot;http://realm.io&quot; title=&quot;Realm&quot;&gt;Realm&lt;/a&gt; for quite a while now, but hadn’t really had a chance to look at it real
+closely. But it has popped up in different ways a bunch of times over the past couple of weeks, and I have a &lt;a href=&quot;https://github.com/aranasaurus/ratings-app&quot; title=&quot;Ratings App&quot;&gt;personal
+project&lt;/a&gt; that I think would be a good fit to try it out in. So that’s what I did this weekend, and I
+thought it’d be good to jot down my experience with it.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h1 id=&quot;wait-realm-whats-that&quot;&gt;Wait, Realm? What’s that?&lt;/h1&gt;
+
+&lt;p&gt;According to their &lt;a href=&quot;http://realm.io&quot; title=&quot;Realm&quot;&gt;website&lt;/a&gt;: &lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Realm is a mobile database: a replacement for SQLite &amp;amp; Core Data Realm can save you thousands of lines of code &amp;amp; weeks of work, and lets you craft amazing new user experiences.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;What attracts me to Realm is that it lets you build your data model using your objects and arrays in code. There’s
+no separate object model schema file that you have to keep up to date separately from your classes that you use
+to actually interact with the data. Your classes are your schema. There’s also very little boiler plate, which, in
+comparison to Core Data is straight up amaze-balls. It’s also thread-safe. And queryable. And fast. And just dead
+simple to set up and use.&lt;/p&gt;
+
+&lt;p&gt;Check this out:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fido&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fido&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Fido&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fido&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;rex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Rex&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;rex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defaultRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addObjects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fido&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;commitWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Rex and Fido are now persisted to disk and changes to their properties must be done within a&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Realm transaction, and are persisted immediately after the transaction is commited including&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// from other threads!&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;dispatch_async&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dispatch_get_global_queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DISPATCH_QUEUE_PRIORITY_DEFAULT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;RLMRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defaultRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactionWithBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objectsWhere&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;age &amp;lt; 2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dog&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\(d.name), The Puppy&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objectsWhere&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name contains &amp;#39;Rex&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firstObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dog&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// &amp;quot;Rex, The Puppy&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;the-app&quot;&gt;The App&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/aranasaurus/ratings-app&quot; title=&quot;Ratings App&quot;&gt;app&lt;/a&gt; is fairly simple. It’s a ratings journal. You take a picture of a thing, rate it, comment on it, attach
+some tags, maybe a location, and then save that to your device. Basically &lt;a href=&quot;https://untappd.com/&quot; title=&quot;Untappd&quot;&gt;Untappd&lt;/a&gt; but for anything you
+can take a picture of and without all the reliance on the social media aspects.&lt;/p&gt;
+
+&lt;p&gt;The data model for the app is super simple. There are two objects:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Item - This is the main class it has properties for title, rating, date, comments, image, and tags.&lt;/li&gt;
+  &lt;li&gt;Tag - This class just has a property for the tag name and an inverse relationship which backlinks to all &lt;code&gt;Items&lt;/code&gt; that use the tag.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If you’d like to follow along all of the source code for the app is available on &lt;a href=&quot;https://github.com/aranasaurus/ratings-app&quot; title=&quot;Ratings App&quot;&gt;github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;converting-from-coredata&quot;&gt;Converting from CoreData&lt;/h1&gt;
+
+&lt;p&gt;I recently got this app up and running as a side project to get some experience writing a full app in Swift. I
+initially wrote the data layer in &lt;a href=&quot;https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreData/cdProgrammingGuide.html&quot; title=&quot;iOS Developer Library - Introduction to Core Data&quot;&gt;CoreData&lt;/a&gt; complete with using an &lt;a href=&quot;https://developer.apple.com/library/ios/documentation/CoreData/Reference/NSFetchedResultsController_Class/&quot; title=&quot;iOS Developer Library - NSFetchedResultsController&quot;&gt;NSFetchedResultsController&lt;/a&gt; for
+my table view and everything. But last night I spent an hour or two replacing all of that with &lt;a href=&quot;http://realm.io/docs/cocoa/0.90.5/#models&quot;&gt;Realm Objects&lt;/a&gt;
+and &lt;a href=&quot;http://realm.io/docs/cocoa/0.90.5/#notifications&quot; title=&quot;Realm - Notifications&quot;&gt;Realm Notification Blocks&lt;/a&gt;. The &lt;a href=&quot;http://realm.io/docs/cocoa/&quot; title=&quot;Realm Cocoa Docs&quot;&gt;docs&lt;/a&gt; are pretty good and the library itself is
+very straight forward, so there wasn’t a lot of bashing my head into the wall… which might sound odd, if you’ve
+spent any time with CoreData.&lt;/p&gt;
+
+&lt;p&gt;Adding the Realm framework to the project is super simple:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Drag n drop the framework file into the project and link it to the app target.&lt;/li&gt;
+  &lt;li&gt;Link against libc++.dylib&lt;/li&gt;
+  &lt;li&gt;Copy over the RLMSupport.swift file for a couple of Swift niceties.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;See their &lt;a href=&quot;http://realm.io/docs/cocoa/&quot; title=&quot;Realm Cocoa Docs&quot;&gt;docs&lt;/a&gt; for details and other configuration info.&lt;/p&gt;
+
+&lt;h2 id=&quot;data-objects&quot;&gt;Data Objects&lt;/h2&gt;
+
+&lt;p&gt;I started off by replacing my &lt;code&gt;NSManagedObject&lt;/code&gt; subclasses with &lt;code&gt;[RLMObject](http://realm.io/docs/cocoa/0.90.5/api/Classes/RLMArray.html)&lt;/code&gt; subclasses and getting rid of the stuff
+I didn’t need anymore: Bye-bye &lt;code&gt;ratings-app.xcdatamodeld&lt;/code&gt;, &lt;code&gt;class func entityName() -&amp;gt; String&lt;/code&gt; functions, and a bunch
+of crap from my &lt;code&gt;AppDelegate&lt;/code&gt;! Changing out the superclass for my data object classes wasn’t difficult at all, mostly
+just had to change from &lt;code&gt;@NSManaged&lt;/code&gt; to &lt;code&gt;dynamic&lt;/code&gt; for all of my properties and then use a &lt;a href=&quot;http://realm.io/docs/cocoa/0.90.5/api/Classes/RLMArray.html&quot;&gt;RLMArray&lt;/a&gt; on the &lt;code&gt;Item&lt;/code&gt;
+class for &lt;code&gt;Tags&lt;/code&gt; and a &lt;a href=&quot;http://realm.io/docs/cocoa/0.90.5/#inverse-relationships&quot;&gt;backlink&lt;/a&gt; on &lt;code&gt;Tag&lt;/code&gt; to get all &lt;code&gt;Items&lt;/code&gt; that link to it. The way they handle that is
+pretty cool, and a bit easier to understand than the CoreData way, even if it is technically more code (and thankfully
+less &lt;code&gt;notcode&lt;/code&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;guid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSUUID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UUIDString&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imagePath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;default.png&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;rating&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Float&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ratingDate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;comments&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tags&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;objectClassName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+
+    &lt;span class=&quot;kr&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;primaryKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;guid&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kr&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;contentsOfFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imagePath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;default.png&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Other stuff...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;Tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;linkingObjectsOfClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;forProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;update-viewcontroller-code&quot;&gt;Update ViewController Code&lt;/h2&gt;
+
+&lt;p&gt;I tried to put most of my &lt;code&gt;CoreData&lt;/code&gt; specific code into my &lt;code&gt;DataStore&lt;/code&gt; class, but inevitably some of the &lt;code&gt;ViewController&lt;/code&gt;
+code ends up with some &lt;code&gt;CoreData&lt;/code&gt; specific stuff in it, like a reference to the &lt;code&gt;NSManagedObjectContext&lt;/code&gt; and calls to its
+&lt;code&gt;save&lt;/code&gt; method. Realm is no different, really. I started with a reference to the &lt;code&gt;RLMRealm&lt;/code&gt; object on the &lt;code&gt;ViewControllers&lt;/code&gt;
+so that I can easily fire off transactions when I need to edit the data (though I’ve now gone back and refactored that
+code to take it out of the VC, more on that later). Because Realm is entirely transaction based, anytime you need to edit
+a property on an object that is stored in a Realm, you have to do so within a Realm transaction. Thankfully these are very
+easy to use:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Other ViewControllery stuff..&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactionWithBlock&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;comments&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Other ViewControllery stuff..&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;p&gt;The ease of this had me thinking about whether or not my separate &lt;code&gt;DataStore&lt;/code&gt; class was even necessary. It really didn’t
+feel like it was… so I removed it. At first I just moved all of its implementation to just be in-lined in the VCs because
+it was mostly just wrapping some functionality into a Realm transaction. Like so:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;IBAction&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ratingChange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;UISlider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactionWithBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ratingDate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;p&gt;After I had everything working I decided to refactor a little and try to make it so that the ViewControllers could be oblivious
+to the fact that this data was coming from Realm. First, I moved all data edits to methods on the data class that was being
+edited. For example, the rating change method above was in my &lt;code&gt;DetailViewController&lt;/code&gt; and my &lt;code&gt;ItemTableViewCell&lt;/code&gt;, I changed
+those to the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// In the VCs:&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;IBAction&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ratingChange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;UISlider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;updateRating&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// In Item.swift:&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;updateRating&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;rating&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rating&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ratingDate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;commitWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;p&gt;This moved the data persistence logic out of my VC and into my data layer. I like that! So I did it some more. I added
+instance methods to &lt;code&gt;Item&lt;/code&gt; so that instances could &lt;code&gt;save()&lt;/code&gt; (which is an &lt;a href=&quot;http://en.wikipedia.org/wiki/Merge_%28SQL%29&quot; title=&quot;Wikipedia - Merge (SQL)&quot;&gt;upsert&lt;/a&gt;) and &lt;code&gt;delete()&lt;/code&gt; themselves from
+whatever &lt;code&gt;Realm&lt;/code&gt; they are attached to. This works great for my situation as I’m not using multiple Realms, if I were these
+would have to be made class methods and would have to take the &lt;code&gt;Realm&lt;/code&gt; to save/delete them to/from as a parameter, which
+would kind of defeat the purpose.&lt;/p&gt;
+
+&lt;h2 id=&quot;replace-nsfetchedresultscontroller-functionality&quot;&gt;Replace NSFetchedResultsController Functionality&lt;/h2&gt;
+
+&lt;p&gt;Replacing the &lt;a href=&quot;https://developer.apple.com/library/ios/documentation/CoreData/Reference/NSFetchedResultsController_Class/&quot; title=&quot;iOS Developer Library - NSFetchedResultsController&quot;&gt;NSFetchedResultsController&lt;/a&gt; functionality mostly consisted of &lt;em&gt;removing&lt;/em&gt; code and adding one bit
+to the &lt;code&gt;viewDidLoad&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;n&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addNotificationBlock&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;rlm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMRealm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMRealmDidChangeNotification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reloadData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;p&gt;This is &lt;em&gt;much&lt;/em&gt; simpler than the 80 or so lines of code it replaced but it does lose out on some functionality: there’s
+no animations for changes that are made to the tableView’s rows. This is due to the fact that Realm’s notifications
+currently notify you of two things:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Something in the Realm has changed. That is, &lt;em&gt;anything&lt;/em&gt; in the Realm changed. And there is no easy way to get notified
+  of &lt;em&gt;what&lt;/em&gt; changed or &lt;em&gt;how&lt;/em&gt; it changed.&lt;/li&gt;
+  &lt;li&gt;The Realm needs to be refreshed because a write transaction on another thread has been commited to the same file
+  that this Realm is using.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;More &lt;a href=&quot;https://github.com/realm/realm-cocoa/issues/601&quot; title=&quot;github.com - Realm - Issue 601 - Support querying for the set of changed objects during Realm notifications&quot;&gt;fine-grained notifications&lt;/a&gt; are definitely something that is on their radar, so I’ll
+be looking forward to that coming in (hopefully) soon.&lt;/p&gt;
+
+&lt;h1 id=&quot;aftermath&quot;&gt;Aftermath&lt;/h1&gt;
+
+&lt;p&gt;That’s basically it for the CoreData -&amp;gt; Realm transition, but I poked at a few other things along the way too.&lt;/p&gt;
+
+&lt;h2 id=&quot;migrations&quot;&gt;Migrations&lt;/h2&gt;
+
+&lt;p&gt;I experimented a little bit with Migrations as I was fiddling with the types of the properties I was storing and I like
+what they’ve done here. It’s really easy to understand and seemed powerful enough for anything I could think up. Here’s
+the tiny migration I made to change a property from being stored as &lt;code&gt;Float&lt;/code&gt; to &lt;code&gt;Double&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// In AppDelegate&amp;#39;s didFinishLaunching...&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;RLMRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setSchemaVersion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;forRealmAtPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defaultRealmPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;migration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;oldSchemaVersion&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;oldSchemaVersion&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;migration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerateObjects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;oldObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newObject&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;newObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rating&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oldObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rating&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;some-extra-realm-extensions&quot;&gt;Some extra Realm Extensions&lt;/h2&gt;
+
+&lt;p&gt;I made myself a few little helpers and put them in a &lt;code&gt;RealmExtensions.swift&lt;/code&gt; file. There’s not very many so I thought
+it’d be nice to go over them in detail here.&lt;/p&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RLMResults - &lt;code&gt;arraySortedByProperty(_:ascending:)&lt;/code&gt;&lt;br /&gt;
+I saw this method name in the docs somewhere, but couldn’t find it in the header file, so I made an extension with a
+basic implementation of what I thought it probably did. Moreover, what I &lt;em&gt;wanted&lt;/em&gt; a method with that name to do. It
+looks a little silly, but it’s very handy in practice, as it takes a &lt;code&gt;RLMResults&lt;/code&gt; object which is Array-like, but not
+actually an Array, and returns a &lt;code&gt;[RLMObject]&lt;/code&gt; which is, in fact, an Array.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMResults&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arraySortedByProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;propertyName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;ascending&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RLMObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sortedResultsUsingProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;propertyName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;ascending&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ascending&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMObject&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RLMObject - save() / delete() &lt;br /&gt;
+These are instance methods that make it so that an &lt;code&gt;RLMObject&lt;/code&gt; can save/delete itself in the &lt;code&gt;RLMRealm&lt;/code&gt; in its &lt;code&gt;realm&lt;/code&gt;
+property or the default Realm if it doesn’t have one. Note that &lt;code&gt;add()&lt;/code&gt; is doing an &lt;code&gt;addOrUpdateObject()&lt;/code&gt; so it
+requires the RLMObject to have a &lt;a href=&quot;http://realm.io/docs/cocoa/0.90.5/#customizing-models&quot;&gt;primaryKey&lt;/a&gt; set. Also note that &lt;code&gt;delete()&lt;/code&gt; is a no-op if the object is
+not currently in a Realm, because what else is it supposed to do?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;??&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RLMRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defaultRealm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addOrUpdateObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;commitWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;deleteObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;commitWriteTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RLMObject - addNotificationBlock() / removeNotification() &lt;br /&gt;
+These were just wrappers to make it so that I could add/remove Notification blocks to the default realm via my data
+object classes. They are simply one-line wrappers that forward on to their corresponding methods on the default
+&lt;code&gt;RLMRealm&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&quot;line-height: 0.5em;&quot; /&gt;
+&lt;p&gt;&lt;!-- TODO: Get rid of this when I have some time to look at my theme a bit --&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;final-thoughts&quot;&gt;Final Thoughts&lt;/h1&gt;
+
+&lt;p&gt;I was initially concerned with the bits where I have to call methods on the &lt;code&gt;RLMRealm&lt;/code&gt; object before I can modify
+properties on my data object, but for one, I found a way to encapsulate that, and two, I don’t really think it needed
+to be encapsulated anyway after I found the &lt;code&gt;transactionWithBlock()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;The biggest problem I ran into was definitely the way the Notifications work. It’s a great start in its current
+state but there will definitely need to be some way of finding out &lt;em&gt;what&lt;/em&gt; changed and &lt;em&gt;how&lt;/em&gt; before this feature
+is really ready for prime-time.&lt;/p&gt;
+
+&lt;p&gt;All in all I’m really pretty excited by Realm and in my limited experience with it. It certainly makes the code nicer
+to look at and, more importantly, nicer to touch without fear that my whole ball of yarn is going to come unraveled.
+It’s still fairly early on in its life-cycle but I think the shiny parts outweigh the rough edges at this point and
+hey, I’ve already merged the “realm” branch into master on my app, so I’m gonna hop on this thing and see where it
+goes!&lt;/p&gt;
+
+</description>
+				<pubDate>Mon, 16 Feb 2015 00:02:13 -0800</pubDate>
+				<link>http://aranasaurus.com/2015/02/16/realm-first-impressions/</link>
+				<guid isPermaLink="true">http://aranasaurus.com/2015/02/16/realm-first-impressions/</guid>
+			</item>
+		
+			<item>
 				<title>Pac-Man Ghost AI Demo</title>
 				<description>&lt;p&gt;Have you ever noticed how the ghosts in Pac-Man don’t all chase him in the same fashion? Does that kind of thing
 pique your interest?  Well, it does mine! So I built a thing that visualizes their AI strategies and that’s what
