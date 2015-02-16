@@ -70,13 +70,27 @@ The app is fairly simple. It's a ratings journal. You take a picture of a thing,
 some tags, maybe a location, and then save that to your device. Basically [Untappd](untappd) but for anything you
 can take a picture of and without all the reliance on the social media aspects.
 
+The data model for the app is super simple. There are two objects:
+
+  1. Item - This is the main class it has properties for title, rating, date, comments, image, and tags.
+  2. Tag - This class just has a property for the tag name and an inverse relationship which backlinks to all `Items` that use the tag.
+
 # Converting from CoreData
 
 I recently got this app up and running as a side project to get some experience writing a full app in Swift. I
 initially wrote the data layer in [CoreData][TODO] complete with using an [NSFetchedResultsController][TODO] for
-my table view and everything. But last night I spent a couple of hours replacing all of that with [Realm Objects][TODO]
-and [Realm Notification Blocks][TODO]. I had spent a few hours reading about Realm over the past week too and
-poked at the docs some so it was a pretty straight forward process.
+my table view and everything. But last night I spent an hour or two replacing all of that with [Realm Objects][TODO]
+and [Realm Notification Blocks][TODO]. The docs are pretty good and the tech itself is very straight forward,
+so there wasn't a lot of bashing my head into the wall... which might sound odd, if you've spent any time with
+CoreData.
+
+Adding the Realm framework to the project is super simple:
+
+  1. Drag n drop the framework file into the project and link it to the app target.
+  2. Link against libc++.dylib
+  3. Copy over the RLMSupport.swift file for a couple of Swift niceties.
+
+See their [docs][TODO] for details and other configuration info.
 
 ## Data Objects
 
@@ -84,29 +98,68 @@ I started off by replacing my `NSManagedObject` subclasses with `RLMObject` subc
 I didn't need anymore: Bye-bye `ratings-app.xcdatamodeld`, `class func entityName() -> String` functions, and a bunch
 of crap from my `AppDelegate`! Changing out the superclass for my data object classes wasn't difficult at all, mostly
 just had to change from `@NSManaged` to `dynamic` for all of my properties and then use a [RLMArray][TODO] on the `Item`
-class for `Tag`s and a [link back property][TODO] on `Tag` to get all `Item`s that link to it. The way they handle that is
+class for `Tags` and a [backlink][TODO] on `Tag` to get all `Items` that link to it. The way they handle that is
 pretty cool, and a bit easier to understand than the CoreData way, even if it is technically more code (and thankfully
-less ~XML).
-
-## Update ViewController Code
-
-I tried to put most of my `CoreData` specific code into my `DataStore` class, but inevitably some of the `ViewController`
-code ends up with some `CoreData` specific stuff in it, like a reference to the `NSManagedObjectContext`. Realm is no
-different really. I keep a reference to the `RLMRealm` object on the `ViewController`s so that I can easily begin/commit
-transactions when I need to edit the data (though I've now gone back and refactored that code to take it out of the VC,
-more on that later). Realm is all transaction based, anytime you need to edit a property on an object that is stored in
-a Realm, you have to do so within a Realm transaction. Thankfully these are very easy to start and commit:
+less `notcode`).
 
 {% highlight swift %}
-let item = items[indexPath.row]
-realm.beginTransaction()
-item.comments = textField.text
-realm.commitTransaction()
+class Item: RLMObject {
+    dynamic var guid = NSUUID().UUIDString
+    dynamic var imagePath = "default.png"
+    dynamic var rating: Float = 0
+    dynamic var ratingDate = NSDate()
+    dynamic var comments = ""
+    dynamic var name = ""
+    dynamic var tags = RLMArray(objectClassName: Tag.className())
+
+    override class func primaryKey() -> String {
+        return "guid"
+    }
+
+    var image: UIImage? {
+        get {
+            if let img = UIImage(contentsOfFile: imagePath) {
+                return img
+            }
+            return UIImage(named: "default.png")
+        }
+    }
+
+    // Other stuff...
+}
+
+class Tag: RLMObject {
+    dynamic var name = ""
+    var items: [Item] {
+        return linkingObjectsOfClass(Item.className(), forProperty: "tags") as [Item]
+    }
+}
 {% endhighlight %}
 
 <p style="line-height: 0.5em;" /> <!-- TODO: Get rid of this when I have some time to look at my theme a bit -->
 
-<!-- TODO: The above might be moved (at least partially) into the intro to Realm section at the beginning of the article. -->
+## Update ViewController Code
+
+I tried to put most of my `CoreData` specific code into my `DataStore` class, but inevitably some of the `ViewController`
+code ends up with some `CoreData` specific stuff in it, like a reference to the `NSManagedObjectContext` and calls to its
+`save` method. Realm is no different really. I keep a reference to the `RLMRealm` object on the `ViewControllers` so that
+I can easily fire off transactions when I need to edit the data (though I've now gone back and refactored that code to
+take it out of the VC, more on that later). Realm is all transaction based, anytime you need to edit a property on an
+object that is stored in a Realm, you have to do so within a Realm transaction. Thankfully these are very easy to start
+and commit:
+
+{% highlight swift %}
+// Other ViewControllery stuff..
+
+let item = items[indexPath.row]
+realm.transactionWithBlock {
+    item.comments = textField.text
+}
+
+// Other ViewControllery stuff..
+{% endhighlight %}
+
+<p style="line-height: 0.5em;" /> <!-- TODO: Get rid of this when I have some time to look at my theme a bit -->
 
 The ease of this had me thinking about whether or not my separate `DataStore` class was even necessary. It really didn't
 feel like it was... so I removed it. At first I just moved all of its implementation (that wasn't implemented as part of
@@ -116,10 +169,10 @@ start a transaction, call a `RLMRealm` method, and then commit the transaction.
 {% highlight swift %}
 @IBAction func ratingChange(sender: UISlider) {
     if let realm = item.realm {
-        realm.beginTransaction()
-        item.rating = sender.value
-        item.ratingDate = NSDate()
-        realm.commitTransaction()
+        realm.transactionWithBlock() {
+            item.rating = sender.value
+            item.ratingDate = NSDate()
+        }
     }
 }
 {% endhighlight %}
@@ -129,7 +182,7 @@ start a transaction, call a `RLMRealm` method, and then commit the transaction.
 After I had everything working I decided to refactor a little and try to make it so that ViewControllers could be oblivious
 to the fact that this data was coming from Realm. First, I moved all data edits to methods on the data class that was being
 edited. For example, the rating change method above was in my `DetailViewController` and my `ItemTableViewCell`, I changed
-those to this:
+those to the following:
 
 {% highlight swift %}
 // In the VCs:
