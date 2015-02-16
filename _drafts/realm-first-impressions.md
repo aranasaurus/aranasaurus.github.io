@@ -78,9 +78,9 @@ The data model for the app is super simple. There are two objects:
 # Converting from CoreData
 
 I recently got this app up and running as a side project to get some experience writing a full app in Swift. I
-initially wrote the data layer in [CoreData][TODO] complete with using an [NSFetchedResultsController][TODO] for
-my table view and everything. But last night I spent an hour or two replacing all of that with [Realm Objects][TODO]
-and [Realm Notification Blocks][TODO]. The docs are pretty good and the tech itself is very straight forward,
+initially wrote the data layer in [CoreData][core-data] complete with using an [NSFetchedResultsController][nsfrc] for
+my table view and everything. But last night I spent an hour or two replacing all of that with [Realm Objects](http://realm.io/docs/cocoa/0.90.5/#models)
+and [Realm Notification Blocks][notifications]. The [docs][realm-docs] are pretty good and the tech itself is very straight forward,
 so there wasn't a lot of bashing my head into the wall... which might sound odd, if you've spent any time with
 CoreData.
 
@@ -90,15 +90,15 @@ Adding the Realm framework to the project is super simple:
   2. Link against libc++.dylib
   3. Copy over the RLMSupport.swift file for a couple of Swift niceties.
 
-See their [docs][TODO] for details and other configuration info.
+See their [docs][realm-docs] for details and other configuration info.
 
 ## Data Objects
 
-I started off by replacing my `NSManagedObject` subclasses with `RLMObject` subclasses and getting rid of the stuff
+I started off by replacing my `NSManagedObject` subclasses with `[RLMObject](http://realm.io/docs/cocoa/0.90.5/api/Classes/RLMArray.html)` subclasses and getting rid of the stuff
 I didn't need anymore: Bye-bye `ratings-app.xcdatamodeld`, `class func entityName() -> String` functions, and a bunch
 of crap from my `AppDelegate`! Changing out the superclass for my data object classes wasn't difficult at all, mostly
-just had to change from `@NSManaged` to `dynamic` for all of my properties and then use a [RLMArray][TODO] on the `Item`
-class for `Tags` and a [backlink][TODO] on `Tag` to get all `Items` that link to it. The way they handle that is
+just had to change from `@NSManaged` to `dynamic` for all of my properties and then use a [RLMArray](http://realm.io/docs/cocoa/0.90.5/api/Classes/RLMArray.html) on the `Item`
+class for `Tags` and a [backlink](http://realm.io/docs/cocoa/0.90.5/#inverse-relationships) on `Tag` to get all `Items` that link to it. The way they handle that is
 pretty cool, and a bit easier to understand than the CoreData way, even if it is technically more code (and thankfully
 less `notcode`).
 
@@ -207,14 +207,14 @@ func updateRating(rating: Float) {
 <p style="line-height: 0.5em;" /> <!-- TODO: Get rid of this when I have some time to look at my theme a bit -->
 
 This moved the data persistence logic out of my VC and into my data layer. I like that! So I did it some more. I added
-instance methods to `Item` so that instances could `save()` (which is an [upsert][TODO]) and `delete()` themselves from
+instance methods to `Item` so that instances could `save()` (which is an [upsert][upsert]) and `delete()` themselves from
 whatever `Realm` they are attached to. This works great for my situation as I'm not using multiple Realms, if I were these
 would have to be made class methods and would have to take the `Realm` to save/delete them to/from as a parameter, which
 would kind of defeat the purpose.
 
 ## Replace NSFetchedResultsController Functionality
 
-Replacing the [NSFetchedResultsController][TODO] functionality mostly consisted of *removing* code and adding one bit
+Replacing the [NSFetchedResultsController][nsfetchedresultscontroll] functionality mostly consisted of *removing* code and adding one bit
 to the `viewDidLoad` method:
 
 {% highlight swift %}
@@ -290,7 +290,7 @@ extension RLMResults {
   * RLMObject - save() / delete() <br />
     These are instance methods that make it so that an `RLMObject` can save/delete itself in the `RLMRealm` in its `realm`
     property or the default Realm if it doesn't have one. Note that `add()` is doing an `addOrUpdateObject()` so it
-    requires the RLMObject to have a [primaryKey][TODO] set. Also note that `delete()` is a no-op if the object is
+    requires the RLMObject to have a [primaryKey](http://realm.io/docs/cocoa/0.90.5/#customizing-models) set. Also note that `delete()` is a no-op if the object is
     not currently in a Realm, because what else is it supposed to do?
 
 <p style="line-height: 0.5em;" /> <!-- TODO: Get rid of this when I have some time to look at my theme a bit -->
@@ -342,6 +342,10 @@ goes!
 
 [realm]: http://realm.io "Realm"
 [fine-grained-notifications]: https://github.com/realm/realm-cocoa/issues/601 "github.com - Realm - Issue 601 - Support querying for the set of changed objects during Realm notifications"
+[notifications]: http://realm.io/docs/cocoa/0.90.5/#notifications "Realm - Notifications"
 [ratings-app]: https://github.com/aranasaurus/ratings-app "Ratings App"
-[untappd]: todo: "Untappd"
-[TODO]: http://istillneedtomakethisarealurl.com/ "TODO: Fill in this link!"
+[untappd]: https://untappd.com/ "Untappd"
+[core-data]: https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreData/cdProgrammingGuide.html "iOS Developer Library - Introduction to Core Data"
+[nsfrc]: https://developer.apple.com/library/ios/documentation/CoreData/Reference/NSFetchedResultsController_Class/ "iOS Developer Library - NSFetchedResultsController"
+[realm-docs]: http://realm.io/docs/cocoa/ "Realm Cocoa Docs"
+[upsert]: http://en.wikipedia.org/wiki/Merge_%28SQL%29 "Wikipedia - Merge (SQL)"
