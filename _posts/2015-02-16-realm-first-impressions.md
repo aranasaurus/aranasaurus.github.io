@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Realm First Impressions"
-request_feedback: false
+date: 2015-02-16T00:02:13-08:00
+request_feedback: true
 ---
 
 I've been interested in [Realm][realm] for quite a while now, but hadn't really had a chance to look at it real
@@ -66,7 +67,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 
 # The App
 
-The app is fairly simple. It's a ratings journal. You take a picture of a thing, rate it, comment on it, attach
+The [app][ratings-app] is fairly simple. It's a ratings journal. You take a picture of a thing, rate it, comment on it, attach
 some tags, maybe a location, and then save that to your device. Basically [Untappd][untappd] but for anything you
 can take a picture of and without all the reliance on the social media aspects.
 
@@ -74,6 +75,8 @@ The data model for the app is super simple. There are two objects:
 
   1. Item - This is the main class it has properties for title, rating, date, comments, image, and tags.
   2. Tag - This class just has a property for the tag name and an inverse relationship which backlinks to all `Items` that use the tag.
+
+If you'd like to follow along all of the source code for the app is available on [github][ratings-app].
 
 # Converting from CoreData
 
