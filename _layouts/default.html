@@ -17,49 +17,31 @@
 
 <body>
 
-
-
   <header id="header">
     <h1><a href="/">{{ site.name }}</a></h1>
     <p>{{ site.description }}</p>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/archives">Archive</a></li>
+        <!--<li><a href="/about">About</a></li>-->
+        <li><a href="http://twitter.com/{{ site.twitter }}">Twitter</a></li>
+        <li><a href="http://github.com/{{ site.github }}">GitHub</a></li>
+        <li><a href="/feed.xml">RSS Feed</a></li>
+      </ul>
+    </nav>
+
   </header>
 
+  <section id="content">
 
-
-  <div id="page">
-
-
-
-    <div id="sidebar">
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/archives">Archive</a></li>
-          <!--<li><a href="/about">About</a></li>-->
-          <li><a href="http://twitter.com/{{ site.twitter }}">Twitter</a></li>
-          <li><a href="http://github.com/{{ site.github }}">GitHub</a></li>
-          <li><a href="/feed.xml">RSS Feed</a></li>
-        </ul>
-      </nav>
-    </div>
-
-
-
-    <div id="content">
       {{ content }}
-    </div>
 
-
-
-  </div>
-
-
+  </section>
 
   <footer id="footer">
-    <p class="copyright">Copyright &copy; {{ site.time | date: '%Y' }} aranasaurus.com, theme by <a href="http://www.webmaster-source.com">Matt Harzewski</a></p>
+    <p class="copyright">Copyright &copy; {{ site.time | date: '%Y' }} aranasaurus.com</p>
   </footer>
-
-
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
   <script src="/assets/js/jquery.mobilemenu.min.js"></script>
@@ -80,7 +62,6 @@ ga('create', 'UA-56022486-1', 'auto');
 ga('send', 'pageview');
 
   </script>
-
 
 </body>
 </html>
