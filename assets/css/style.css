@@ -178,6 +178,12 @@ header {
 
 
 /*** Posts ***/
+.post-content {
+  /* TODO: Get rid of this. It fixes a problem where mobile devices want to render the post
+   * pages with some extra invisible content off to the side. Need to fix that problem first. */
+  overflow: hidden;
+}
+
 article {
 }
 
