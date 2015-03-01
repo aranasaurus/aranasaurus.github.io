@@ -13,20 +13,20 @@ layout: default
 	{% endif %}
 
 	<div class="post-content">
-        {{ content }}
-        <p class="meta">Posted by <a href="http://twitter.com/{{ site.twitter }}">{{ site.author }}</a> at <span class="postdate">{{ page.date | date: "%H:%m on %b %d, %Y" }}</span></p>
-    </div>
+          {{ content }}
+          <p class="meta">Posted by <a href="http://twitter.com/{{ site.twitter }}">{{ site.author }}</a> at <span class="postdate">{{ page.date | date: "%H:%m on %b %d, %Y" }}</span></p>
+        </div>
 
-    {% if page.request_feedback %}
-    <hr />
-    <p>Do you have any thoughts or opinions on the matter? <a href="mailto:ryan@ryanarana.com?subject={{ page.title }}">Email me</a>! Or
-        <a class="twitter-mention-button" href="https://twitter.com/intent/tweet?screen_name=aranasaurus&count=none">
+        {% if page.request_feedback %}
+        <hr />
+        <p>Do you have any thoughts or opinions on the matter? <a href="mailto:ryan@ryanarana.com?subject={{ page.title }}">Email me</a>! Or
+          <a class="twitter-mention-button" href="https://twitter.com/intent/tweet?screen_name=aranasaurus&count=none">
             tweet at me!
-        </a>
-        <script type="text/javascript">
+          </a>
+          <script type="text/javascript">
             window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return}js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})}(document,"script","twitter-wjs"));
-        </script>
-    </p>
-    {% endif %}
+          </script>
+        </p>
+        {% endif %}
 
 </article>
