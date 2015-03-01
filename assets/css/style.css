@@ -29,7 +29,6 @@ table {
 }
 
 
-
 /*** Basics ***/
 body {
 	font-family: Verdana, serif;
@@ -109,72 +108,94 @@ h3 {
 
 
 /*** Structure ***/
-#page {
-	width: 660px;
-	margin: 0 auto;
-	position: relative;
+
+body {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 1em 2em;
+}
+
+header {
+  margin-bottom: 2em;
 }
 
 #header {
-	width: 660px;
-	margin: 40px auto 50px auto;
+  padding: 0 1em 0 0;
 }
+
 #header h1 {
-	font-size: 32px;
-	margin-bottom: 4px;
+  font-size: 32px;
+  margin-bottom: 4px;
 }
+
 #header h1 a {
-	border: none;
+  border: none;
+}
+
+#header nav {
+  margin: 0;
+  background-color: #eee8d5;
+  border-bottom: solid 2px #93a1a1;
+}
+
+#header nav ul {
+  list-style: none;
+  margin: 0;
+}
+
+#header nav ul li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+#header nav ul li a {
+  border: none;
+  display: block;
+}
+
+#header #social ul {
+  padding: 0 0.25em;
+  font-size: 2em;
+  float: right;
+  position: relative;
+  border: solid 1px #93a1a1;
+  border-top: solid 2px #93a1a1;
+  background-color: #eee8d5;
+}
+
+#header #social ul li {
+  margin: 0 0.125em;
 }
 
 #footer {
-	width: 660px;
-	margin: auto;
-	padding-top: 10px;
-	font-size: 0.85em;
-	border-top: 1px solid #073642;
-}
-
-#content {
-	width: 660px;
-	margin: 0 auto;
-}
-
-#sidebar {
-	position: absolute;
-	text-align: right;
-	width: 160px;
-	top: 0;
-	left: -240px;
-}
-
-#sidebar li {
-	list-style: none;
-	margin: 2px 0;
-}
-
-#sidebar a {
-	border: none;
-	font-family: "Helvetica Neue", "Helvetica", serif;
-	font-size: 1.2em;
-	padding: 2px 4px;
+  margin: auto;
+  padding-top: 10px;
+  font-size: 0.85em;
+  border-top: 1px solid #073642;
 }
 
 
 
 /*** Posts ***/
+.post-content {
+  /* TODO: Get rid of this. It fixes a problem where mobile devices want to render the post
+   * pages with some extra invisible content off to the side. Need to fix that problem first. */
+  overflow: hidden;
+}
+
 article {
 }
 
 article h1 {
-	font-size: 17px;
-	margin: 0 0 10px 0;
+  font-size: 17px;
+  margin: 0 0 10px 0;
 }
 article h1 a {
-	border: none;
+  border: none;
 }
 article h1 a.anchor {
-	margin-left: 8px;
+  margin-left: 8px;
 }
 
 article img {
@@ -224,34 +245,6 @@ img.center {
 	float: right;
 }
 
-
-
-/*** Media Queries ***/
-@media all and (max-width: 970px) {
-
-	#page, #header, #content, #footer {
-		width: inherit;
-		padding-left: 10px;
-		padding-right: 10px;
-	}
-
-	#sidebar {
-		position: relative;
-		text-align: left;
-		width: 100%;
-		left: 0;
-		margin: 10px 10px 20px 10px;
-	}
-
-	#sidebar nav select.mnav {
-		display: block;
-		margin-bottom: 15px;
-	}
-
-}
-
-
-
 /*** Icons ***/
 @font-face {
   font-family: 'solarthemeicons';
@@ -283,4 +276,8 @@ img.center {
 .icon-anchor:before { content: '\e800'; }
 .icon-anchor {
 	font-size: 65%;
+}
+
+#content {
+  padding: 1em;
 }
